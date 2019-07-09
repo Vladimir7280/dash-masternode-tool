@@ -25,7 +25,7 @@ After making sure that you have the correct Python version, execute the followin
 [fixmt@ubuntu /]# virtualenv -p python3.6 venv
 [fixmt@ubuntu /]# . venv/bin/activate
 [fixmt@ubuntu /]# pip install --upgrade setuptools
-[fixmt@ubuntu /]# git clone https://github.com/Bertrand256/fix-masternode-tool
+[fixmt@ubuntu /]# git clone https://github.com/Vladimir7280/fix-masternode-tool
 [fixmt@ubuntu /]# cd fix-masternode-tool/
 [fixmt@ubuntu /]# pip install -r requirements.txt
 [fixmt@ubuntu /]# pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build fix_masternode_tool.spec
@@ -72,7 +72,7 @@ docker pull bertrand256/build-fixmt:ubuntu
 
 **Build the image yourself, using the Dockerfile file from the FIXMT project repository.** 
 
-* Download the https://github.com/Bertrand256/fix-masternode-tool/blob/master/build/ubuntu/Dockerfile file and place it in the *working directory*
+* Download the https://github.com/Vladimir7280/fix-masternode-tool/blob/master/build/ubuntu/Dockerfile file and place it in the *working directory*
 * Execute the following command:
 ```
 docker build -t bertrand256/build-fixmt:ubuntu .

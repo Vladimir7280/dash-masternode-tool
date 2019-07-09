@@ -2,7 +2,7 @@
 # Update hardware wallet firmware
 None of the most popular hardware wallets supports FIX TESTNET in official firmware, so this feature can be useful if you would like to enable that support in your Trezor or Keepkey device. Both of them have publicly available firmware source code, so it's possible to anyone changing that code to enable features that are not officially available. 
 
-For those who do not want to bother (or do not have knowledge) the compilation procedure, I have prepared custom firmwares with TESTNET support for Trezor and KeepKey. Files are available for download at the following address: https://github.com/Bertrand256/fix-masternode-tool/tree/master/hardware-wallets/firmware.
+For those who do not want to bother (or do not have knowledge) the compilation procedure, I have prepared custom firmwares with TESTNET support for Trezor and KeepKey. Files are available for download at the following address: https://github.com/Vladimir7280/fix-masternode-tool/tree/master/hardware-wallets/firmware.
 
 > **Important**: the latest versions of the Trezor One bootloader have a bug disallowing running custom firmwares, so until the situation is clarified, firmwares for this device, prepared by me will be hidden. Therefore currently, when it comes to support for FIX TESTNET, I have only published firmwares for Trezor T and Keepkey devices.
 

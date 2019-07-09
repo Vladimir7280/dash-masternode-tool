@@ -4,7 +4,7 @@ For security reasons, some of the scenarios presented above require FIXMT to be 
 1. Boot your computer from the LiveCD or LiveUSB media. It is recommended to use a computer without any hard drives installed (or at least physically disconnecting any drives) and to use wired Ethernet instead of Wi-Fi for your network connection.
   Once your system boots, select the `Try Ubuntu` option:  
   ![Ubuntu - boot](img/hwri/ubuntu-live-cd-boot.png)
-2. On the running Linux system, download the latest [FIX Masternode Tool archived binary](https://github.com/Bertrand256/fix-masternode-tool/releases) (.tar.gz) from the project page, or copy the file to the system in some other way.
+2. On the running Linux system, download the latest [FIX Masternode Tool archived binary](https://github.com/Vladimir7280/fix-masternode-tool/releases) (.tar.gz) from the project page, or copy the file to the system in some other way.
 3. Decompress the file by double-clicking it.
 4. Disconnect the computer from the network (unplug the cable) and remove all unnecessary USB media.
 5. Launch FIXMT.

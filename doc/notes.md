@@ -20,7 +20,7 @@ between FIXMT and the KeepKey official client app, use NFC.
 ## Note DMT0002
 Current versions of the all three hardware wallets supported by the application do not support FIX TESTNET. It is possible though, making a few modifications to the firmware source code of Trezor and KeepKey devices, to make them support Testnet. 
 
-For those who do not want to do it on their own, I have prepared firmware for Trezor One and for KeepKey with that support. It's available for manual download from the following url: https://github.com/Bertrand256/fix-masternode-tool/tree/master/hardware-wallets/firmware, but it can also be automatically downloaded and installed using the [Hardware wallet initialization/recovery](hw-initialization-recovery.md) window`.  
+For those who do not want to do it on their own, I have prepared firmware for Trezor One and for KeepKey with that support. It's available for manual download from the following url: https://github.com/Vladimir7280/fix-masternode-tool/tree/master/hardware-wallets/firmware, but it can also be automatically downloaded and installed using the [Hardware wallet initialization/recovery](hw-initialization-recovery.md) window`.  
 
 **Important:** due tu a bug in the latest Trezor bootloader, custom firmwares can't be executed, To avoid users' confusion, custom firmware for this device with Testnet support isn't currently shown by FIXMT app, nor is visible on the project website.
 

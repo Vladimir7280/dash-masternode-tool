@@ -35,7 +35,7 @@ related to starting masternodes. It will be improved according to the resources 
     * Linux
        * [Ubuntu](doc/build-fixmt-linux-ubuntu.md)
        * [Fedora](doc/build-fixmt-linux-fedora.md)
- * [Downloads](https://github.com/Bertrand256/fix-masternode-tool/releases/latest)
+ * [Downloads](https://github.com/Vladimir7280/fix-masternode-tool/releases/latest)
  * [Changelog](changelog.md)
 
 ## Masternodes
@@ -213,7 +213,7 @@ For this reason, in addition to providing the source code on GitHub, binary vers
 * macOS 10.13.2 High Sierra
 * Linux Debian Jessie
 
-Binary versions of the latest release can be downloaded from: https://github.com/Bertrand256/fix-masternode-tool/releases/latest.
+Binary versions of the latest release can be downloaded from: https://github.com/Vladimir7280/fix-masternode-tool/releases/latest.
 
 ### Verification of the application binary files
 Beginning with version 0.9.15, each binary file forming part of a release has a corresponding signature file that you can use to verify the authenticity of the downloaded binary file (to ensure it has not been corrupted or replaced with a counterfeit) and confirm that it has been signed by the application author (Keybase user: bertrand256).

@@ -11,7 +11,7 @@ RUN apt-get update \
  && virtualenv -p python3 venv \
  && . venv/bin/activate \
  && pip install --upgrade setuptools \
- && git clone https://github.com/Bertrand256/fix-masternode-tool \
+ && git clone https://github.com/Vladimir7280/fix-masternode-tool \
  && cd fix-masternode-tool/ \
  && pip install -r requirements.txt \
  && cd ~/fixmt \

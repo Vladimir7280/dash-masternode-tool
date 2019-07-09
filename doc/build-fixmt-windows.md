@@ -111,7 +111,7 @@ Open the Windows command prompt (*cmd.exe*)  and run the following commands:
 
   ```
   cd c:\projects
-  git clone https://github.com/Bertrand256/fix-masternode-tool
+  git clone https://github.com/Vladimir7280/fix-masternode-tool
   ```
 
 * Install the FIXMT Python requirements:

@@ -15,7 +15,7 @@ Execute the following commands from the terminal:
 [fixmt@fedora /]# virtualenv -p python3 venv
 [fixmt@fedora /]# . venv/bin/activate
 [fixmt@fedora /]# pip install --upgrade setuptools
-[fixmt@fedora /]# git clone https://github.com/Bertrand256/fix-masternode-tool
+[fixmt@fedora /]# git clone https://github.com/Vladimir7280/fix-masternode-tool
 [fixmt@fedora /]# cd fix-masternode-tool/
 [fixmt@fedora /]# pip install -r requirements.txt
 [fixmt@fedora /]# pyinstaller --distpath=../dist/linux --workpath=../dist/linux/build fix_masternode_tool.spec
@@ -61,7 +61,7 @@ docker pull bertrand256/build-fixmt
 
 **Build the image yourself, using the Dockerfile file from the FIXMT project repository.** 
 
-* Download the https://github.com/Bertrand256/fix-masternode-tool/blob/master/build/fedora/Dockerfile file and place it in the *working directory*
+* Download the https://github.com/Vladimir7280/fix-masternode-tool/blob/master/build/fedora/Dockerfile file and place it in the *working directory*
 * Execute the following command:
 ```
 docker build -t bertrand256/build-fixmt .

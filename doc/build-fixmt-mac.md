@@ -52,7 +52,7 @@ You can build FIX Masternode Tool for macOS by opening the Terminal app and runn
 
   ```
   cd ~/projects
-  git clone https://github.com/Bertrand256/fix-masternode-tool
+  git clone https://github.com/Vladimir7280/fix-masternode-tool
   ```
 
 * Install the FIXMT Python requirements:

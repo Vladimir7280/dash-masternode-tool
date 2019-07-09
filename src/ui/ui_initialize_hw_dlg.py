@@ -615,7 +615,7 @@ class Ui_HwInitializeDlg(object):
         item.setText(_translate("HwInitializeDlg", "URL"))
         item = self.tabFirmwareWebSources.horizontalHeaderItem(5)
         item.setText(_translate("HwInitializeDlg", "Fingerprint"))
-        self.label_2.setText(_translate("HwInitializeDlg", "<a href=\"https://github.com/Bertrand256/fix-masternode-tool/blob/master/doc/hw-initialization-recovery.md\">Read the documentation on GitHub</a>"))
+        self.label_2.setText(_translate("HwInitializeDlg", "<a href=\"https://github.com/Vladimir7280/fix-masternode-tool/blob/master/doc/hw-initialization-recovery.md\">Read the documentation on GitHub</a>"))
         self.btnCancel.setText(_translate("HwInitializeDlg", "Cancel"))
         self.btnBack.setText(_translate("HwInitializeDlg", "Back"))
         self.btnNext.setText(_translate("HwInitializeDlg", "Continue"))
