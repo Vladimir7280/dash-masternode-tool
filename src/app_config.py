@@ -38,7 +38,7 @@ from cryptography.hazmat.primitives import serialization
 
 import app_defs
 import base58
-import dash_utils
+import fix_utils
 import hw_intf
 from app_defs import APP_NAME_SHORT, APP_NAME_LONG, HWType, APP_DATA_DIR_NAME, DEFAULT_LOG_FORMAT, get_known_loggers
 from app_utils import encrypt, decrypt
@@ -72,7 +72,7 @@ class AppFeatueStatus(QObject):
     #  0: default value implemented in the source code
     #  2: value read from the app cache
     #  4: value read from the project github repository (can be lowered or rised)
-    #  6: value read from the Dash network (the highest priority by default)
+    #  6: value read from the FIX network (the highest priority by default)
     PRIORITY_DEFAULT = 0
     PRIORITY_APP_CACHE = 2
     PRIORITY_NETWORK = 6
@@ -120,26 +120,26 @@ class AppConfig(QObject):
         self.date_format = app_utils.get_default_locale().dateFormat(QLocale.ShortFormat)
         self.date_time_format = app_utils.get_default_locale().dateTimeFormat(QLocale.ShortFormat)
 
-        # List of Dash network configurations. Multiple conn configs advantage is to give the possibility to use
+        # List of FIX network configurations. Multiple conn configs advantage is to give the possibility to use
         # another config if particular one is not functioning (when using "public" RPC service, it could be node's
         # maintanance)
-        self.dash_net_configs = []
+        self.fix_net_configs = []
 
         # to distribute the load evenly over "public" RPC services, we choose radom connection (from enabled ones)
-        # if it is set to False, connections will be used accoording to its order in dash_net_configs list
-        self.random_dash_net_config = True
+        # if it is set to False, connections will be used accoording to its order in fix_net_configs list
+        self.random_fix_net_config = True
 
-        # list of all enabled dashd configurations (DashNetworkConnectionCfg) - they will be used accourding to
+        # list of all enabled fixd configurations (FixNetworkConnectionCfg) - they will be used accourding to
         # the order in list
-        self.active_dash_net_configs = []
+        self.active_fix_net_configs = []
 
-        # list of misbehaving dash network configurations - they will have the lowest priority during next
+        # list of misbehaving fix network configurations - they will have the lowest priority during next
         # connections
         self.defective_net_configs = []
 
         # the contents of the app-params.json configuration file read from the project GitHub repository
         self._remote_app_params = {}
-        self._dash_blockchain_info = {}
+        self._fix_blockchain_info = {}
         self.feature_register_dmn_automatic = AppFeatueStatus(True, 0, '')
         self.feature_update_registrar_automatic = AppFeatueStatus(True, 0, '')
         self.feature_update_service_automatic = AppFeatueStatus(True, 0, '')
@@ -150,20 +150,20 @@ class AppConfig(QObject):
                                               #  NFC: compatible with official Keepkey client app
                                               #  NFKD: compatible with Trezor
 
-        self.dash_network = 'MAINNET'
+        self.fix_network = 'MAINNET'
 
-        self.block_explorer_tx_mainnet = 'https://insight.dash.org/insight/tx/%TXID%'
-        self.block_explorer_addr_mainnet = 'https://insight.dash.org/insight/address/%ADDRESS%'
-        self.block_explorer_tx_testnet = 'https://testnet-insight.dashevo.org/insight/tx/%TXID%'
-        self.block_explorer_addr_testnet = 'https://testnet-insight.dashevo.org/insight/address/%ADDRESS%'
-        self.tx_api_url_mainnet = 'https://insight.dash.org/insight'
-        self.tx_api_url_testnet = 'https://testnet-insight.dashevo.org/insight'
-        self.dash_central_proposal_api = 'https://www.dashcentral.org/api/v1/proposal?hash=%HASH%'
-        self.dash_nexus_proposal_api = 'https://api.dashnexus.org/proposals/%HASH%'
+        self.block_explorer_tx_mainnet = 'https://explorer.fix.network/tx/%TXID%'
+        self.block_explorer_addr_mainnet = 'https://explorer.fix.network/address/%ADDRESS%'
+        self.block_explorer_tx_testnet = 'http://159.69.211.60/tx/%TXID%'
+        self.block_explorer_addr_testnet = 'http://159.69.211.60/address/%ADDRESS%'
+        self.tx_api_url_mainnet = 'https://explorer.fix.network'
+        self.tx_api_url_testnet = 'http://159.69.211.60'
+        self.fix_central_proposal_api = 'https://www.fixcentral.org/api/v1/proposal?hash=%HASH%'
+        self.fix_nexus_proposal_api = 'https://api.fixnexus.org/proposals/%HASH%'
 
         # public RPC connection configurations
-        self.public_conns_mainnet: Dict[str, DashNetworkConnectionCfg] = {}
-        self.public_conns_testnet: Dict[str, DashNetworkConnectionCfg] = {}
+        self.public_conns_mainnet: Dict[str, FixNetworkConnectionCfg] = {}
+        self.public_conns_testnet: Dict[str, FixNetworkConnectionCfg] = {}
 
         self.check_for_updates = True
         self.backup_config_file = True
@@ -204,7 +204,7 @@ class AppConfig(QObject):
         self.trezor_hid = True
 
         try:
-            self.default_rpc_connections = self.decode_connections(default_config.dashd_default_connections)
+            self.default_rpc_connections = self.decode_connections(default_config.fixd_default_connections)
         except Exception:
             self.default_rpc_connections = []
             logging.exception('Exception while parsing default RPC connections.')
@@ -261,7 +261,7 @@ class AppConfig(QObject):
             home_dir = os.path.expanduser('~')
             app_user_dir = os.path.join(home_dir, APP_DATA_DIR_NAME + '-v' + str(CURRENT_CFG_FILE_VERSION))
             if not os.path.exists(app_user_dir):
-                prior_version_dirs = ['.dmt']
+                prior_version_dirs = ['.fixmt']
                 # look for the data dir of the previous version
                 for d in prior_version_dirs:
                     old_user_data_dir = os.path.join(home_dir, d)
@@ -271,7 +271,7 @@ class AppConfig(QObject):
 
         self.data_dir = app_user_dir
         self.cache_dir = os.path.join(self.data_dir, 'cache')
-        cache_file_name = os.path.join(self.cache_dir, 'dmt_cache_v2.json')
+        cache_file_name = os.path.join(self.cache_dir, 'fixmt_cache_v2.json')
 
         if migrate_config:
             try:
@@ -345,7 +345,7 @@ class AppConfig(QObject):
                 # if there was an error when migrating to a new configuration, use the old data directory
                 self.data_dir = old_user_data_dir
                 self.cache_dir = os.path.join(self.data_dir, 'cache')
-                cache_file_name = os.path.join(self.cache_dir, 'dmt_cache_v2.json')
+                cache_file_name = os.path.join(self.cache_dir, 'fixmt_cache_v2.json')
 
         if not os.path.exists(self.cache_dir):
             os.makedirs(self.cache_dir)
@@ -371,7 +371,7 @@ class AppConfig(QObject):
 
         # setup logging
         self.log_dir = os.path.join(self.data_dir, 'logs')
-        self.log_file = os.path.join(self.log_dir, 'dmt.log')
+        self.log_file = os.path.join(self.log_dir, 'fixmt.log')
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir)
 
@@ -403,39 +403,39 @@ class AppConfig(QObject):
 
     def save_cache_settings(self):
         if self.feature_register_dmn_automatic.get_value() is not None:
-            app_cache.set_value('FEATURE_REGISTER_DMN_AUTOMATIC_' + self.dash_network,
+            app_cache.set_value('FEATURE_REGISTER_DMN_AUTOMATIC_' + self.fix_network,
                                 self.feature_register_dmn_automatic.get_value())
         if self.feature_update_registrar_automatic.get_value() is not None:
-            app_cache.set_value('FEATURE_UPDATE_REGISTRAR_AUTOMATIC_' + self.dash_network,
+            app_cache.set_value('FEATURE_UPDATE_REGISTRAR_AUTOMATIC_' + self.fix_network,
                                 self.feature_update_registrar_automatic.get_value())
         if self.feature_update_service_automatic.get_value() is not None:
-            app_cache.set_value('FEATURE_UPDATE_SERVICE_AUTOMATIC_' + self.dash_network,
+            app_cache.set_value('FEATURE_UPDATE_SERVICE_AUTOMATIC_' + self.fix_network,
                                 self.feature_update_service_automatic.get_value())
         if self.feature_revoke_operator_automatic.get_value() is not None:
-            app_cache.set_value('FEATURE_REVOKE_OPERATOR_AUTOMATIC_' + self.dash_network,
+            app_cache.set_value('FEATURE_REVOKE_OPERATOR_AUTOMATIC_' + self.fix_network,
                                 self.feature_revoke_operator_automatic.get_value())
 
     def restore_cache_settings(self):
-        ena = app_cache.get_value('FEATURE_REGISTER_AUTOMATIC_DMN_' + self.dash_network, True, bool)
+        ena = app_cache.get_value('FEATURE_REGISTER_AUTOMATIC_DMN_' + self.fix_network, True, bool)
         self.feature_register_dmn_automatic.set_value(ena, AppFeatueStatus.PRIORITY_APP_CACHE)
-        ena = app_cache.get_value('FEATURE_UPDATE_REGISTRAR_AUTOMATIC_' + self.dash_network, True, bool)
+        ena = app_cache.get_value('FEATURE_UPDATE_REGISTRAR_AUTOMATIC_' + self.fix_network, True, bool)
         self.feature_update_registrar_automatic.set_value(ena, AppFeatueStatus.PRIORITY_APP_CACHE)
-        ena = app_cache.get_value('FEATURE_UPDATE_SERVICE_AUTOMATIC_' + self.dash_network, True, bool)
+        ena = app_cache.get_value('FEATURE_UPDATE_SERVICE_AUTOMATIC_' + self.fix_network, True, bool)
         self.feature_update_service_automatic.set_value(ena, AppFeatueStatus.PRIORITY_APP_CACHE)
-        ena = app_cache.get_value('FEATURE_REVOKE_OPERATOR_AUTOMATIC_' + self.dash_network, True, bool)
+        ena = app_cache.get_value('FEATURE_REVOKE_OPERATOR_AUTOMATIC_' + self.fix_network, True, bool)
         self.feature_revoke_operator_automatic.set_value(ena, AppFeatueStatus.PRIORITY_APP_CACHE)
 
     def copy_from(self, src_config):
-        self.dash_network = src_config.dash_network
-        self.dash_net_configs = copy.deepcopy(src_config.dash_net_configs)
-        self.random_dash_net_config = src_config.random_dash_net_config
+        self.fix_network = src_config.fix_network
+        self.fix_net_configs = copy.deepcopy(src_config.fix_net_configs)
+        self.random_fix_net_config = src_config.random_fix_net_config
         self.hw_type = src_config.hw_type
         self.hw_keepkey_psw_encoding = src_config.hw_keepkey_psw_encoding
         self.block_explorer_tx_mainnet = src_config.block_explorer_tx_mainnet
         self.block_explorer_tx_testnet = src_config.block_explorer_tx_testnet
         self.block_explorer_addr_mainnet = src_config.block_explorer_addr_mainnet
         self.block_explorer_addr_testnet = src_config.block_explorer_addr_testnet
-        self.dash_central_proposal_api = src_config.dash_central_proposal_api
+        self.fix_central_proposal_api = src_config.fix_central_proposal_api
         self.check_for_updates = src_config.check_for_updates
         self.backup_config_file = src_config.backup_config_file
         self.read_proposals_external_attributes = src_config.read_proposals_external_attributes
@@ -455,17 +455,17 @@ class AppConfig(QObject):
 
     def configure_cache(self):
         if self.is_testnet():
-            db_cache_file_name = 'dmt_cache_testnet_v2.db'
+            db_cache_file_name = 'fixmt_cache_testnet_v2.db'
         else:
-            db_cache_file_name = 'dmt_cache_v2.db'
+            db_cache_file_name = 'fixmt_cache_v2.db'
         self.tx_cache_dir = os.path.join(self.cache_dir, 'tx-' + self.hw_coin_name)
         if not os.path.exists(self.tx_cache_dir):
             os.makedirs(self.tx_cache_dir)
             if self.is_testnet():
                 # move testnet json files to a subdir (don't do this for mainnet files
-                # util there most of users move to dmt v0.9.22
+                # util there most of users move to fixmt v0.9.22
                 try:
-                    for file in glob.glob(os.path.join(self.cache_dir, 'insight_dash_testnet*.json')):
+                    for file in glob.glob(os.path.join(self.cache_dir, 'insight_fix_testnet*.json')):
                         shutil.move(file, self.tx_cache_dir)
                 except Exception as e:
                     logging.exception(str(e))
@@ -494,7 +494,7 @@ class AppConfig(QObject):
                     logging.info('Cleared the cached votes because of the spork 15 activation')
                     cur.execute('delete from VOTING_RESULTS')
                     cur.execute('delete from LIVE_CONFIG')
-                    cur.execute('update proposals set dmt_voting_last_read_time=0')
+                    cur.execute('update proposals set fixmt_voting_last_read_time=0')
                     self.db_intf.commit()
                     self.sig_display_message.emit(1000,
                                                   'Some of your voting results on proposals have been reset in '
@@ -530,8 +530,8 @@ class AppConfig(QObject):
         from a file.
         :return:
         """
-        self.dash_net_configs.clear()
-        self.active_dash_net_configs.clear()
+        self.fix_net_configs.clear()
+        self.active_fix_net_configs.clear()
         self.defective_net_configs.clear()
         self.masternodes.clear()
 
@@ -628,11 +628,11 @@ class AppConfig(QObject):
                 if self.log_level_str != log_level_str:
                     self.set_log_level(log_level_str)
 
-                dash_network = config.get(section, 'dash_network', fallback='MAINNET')
-                if dash_network not in ('MAINNET', 'TESTNET'):
-                    logging.warning(f'Invalid dash_network value: {dash_network}')
-                    dash_network = 'MAINNET'
-                self.dash_network = dash_network
+                fix_network = config.get(section, 'fix_network', fallback='MAINNET')
+                if fix_network not in ('MAINNET', 'TESTNET'):
+                    logging.warning(f'Invalid fix_network value: {fix_network}')
+                    fix_network = 'MAINNET'
+                self.fix_network = fix_network
 
                 if self.is_mainnet():
                     def_bip32_path = "44'/5'/0'/0/0"
@@ -653,7 +653,7 @@ class AppConfig(QObject):
                                     self.hw_keepkey_psw_encoding)
                     self.hw_keepkey_psw_encoding = 'NFC'
 
-                self.random_dash_net_config = self.value_to_bool(config.get(section, 'random_dash_net_config',
+                self.random_fix_net_config = self.value_to_bool(config.get(section, 'random_fix_net_config',
                                                                             fallback='1'))
                 self.check_for_updates = self.value_to_bool(config.get(section, 'check_for_updates', fallback='1'))
                 self.backup_config_file = self.value_to_bool(config.get(section, 'backup_config_file', fallback='1'))
@@ -743,7 +743,7 @@ class AppConfig(QObject):
                                 was_error = True
                         elif re.match(conn_cfg_section_name+'\d', section):
                             # read network configuration from new config file format
-                            cfg = DashNetworkConnectionCfg('rpc')
+                            cfg = FixNetworkConnectionCfg('rpc')
                             cfg.enabled = self.value_to_bool(config.get(section, 'enabled', fallback='1'))
                             cfg.host = config.get(section, 'host', fallback='').strip()
                             cfg.port = config.get(section, 'port', fallback='').strip()
@@ -758,11 +758,11 @@ class AppConfig(QObject):
                             cfg.testnet = self.value_to_bool(config.get(section, 'testnet', fallback='0'))
                             skip_adding = False
 
-                            if cfg.host.lower() == 'test.stats.dash.org':
+                            if cfg.host.lower() == 'test.stats.fix.org':
                                 skip_adding = True
                                 configuration_corrected = True
                             elif cfg.get_conn_id() == '9b73e3fad66e8d07597c3afcf14f8f3513ed63dfc903b5d6e02c46f59c2ffadc':
-                                # delete obsolete "public" connection to luna.dash-masternode-tool.org
+                                # delete obsolete "public" connection to luna.fix-masternode-tool.org
                                 skip_adding = True
                                 configuration_corrected = True
 
@@ -776,7 +776,7 @@ class AppConfig(QObject):
                             else:
                                 # not existent rpc_encryption_pubkey parameter in the configuration file could mean
                                 # we are opwnninf the old configuration file or the parameter was deleted by the old
-                                # dmt version; if the connection belongs to the default connections, restore
+                                # fixmt version; if the connection belongs to the default connections, restore
                                 # the RPC encryption key
                                 for c in self.default_rpc_connections:
                                     if c.get_conn_id() == cfg.get_conn_id():
@@ -792,7 +792,7 @@ class AppConfig(QObject):
                                         configuration_corrected = True
 
                             if not skip_adding:
-                                self.dash_net_configs.append(cfg)
+                                self.fix_net_configs.append(cfg)
 
                     except Exception as e:
                         logging.exception(str(e))
@@ -911,13 +911,13 @@ class AppConfig(QObject):
         config.add_section(section)
         config.set(section, 'CFG_VERSION', str(CURRENT_CFG_FILE_VERSION))
         config.set(section, 'log_level', self.log_level_str)
-        config.set(section, 'dash_network', self.dash_network)
+        config.set(section, 'fix_network', self.fix_network)
         if not self.hw_type:
             self.hw_type = HWType.trezor
         config.set(section, 'hw_type', self.hw_type)
         config.set(section, 'hw_keepkey_psw_encoding', self.hw_keepkey_psw_encoding)
         config.set(section, 'bip32_base_path', self.last_bip32_base_path)
-        config.set(section, 'random_dash_net_config', '1' if self.random_dash_net_config else '0')
+        config.set(section, 'random_fix_net_config', '1' if self.random_fix_net_config else '0')
         config.set(section, 'check_for_updates', '1' if self.check_for_updates else '0')
         config.set(section, 'backup_config_file', '1' if self.backup_config_file else '0')
         config.set(section, 'dont_use_file_dialogs', '1' if self.dont_use_file_dialogs else '0')
@@ -955,8 +955,8 @@ class AppConfig(QObject):
             config.set(section, 'dmn_voting_address', mn.dmn_voting_address)
             mn.modified = False
 
-        # save dash network connections
-        for idx, cfg in enumerate(self.dash_net_configs):
+        # save fix network connections
+        for idx, cfg in enumerate(self.fix_net_configs):
             section = 'CONNECTION' + str(idx+1)
             config.add_section(section)
             config.set(section, 'method', cfg.method)
@@ -1019,7 +1019,7 @@ class AppConfig(QObject):
             if features:
                 feature = features.get(symbol)
                 if feature:
-                    a = feature.get(self.dash_network.lower())
+                    a = feature.get(self.fix_network.lower())
                     if a:
                         prio = a.get('priority', 0)
                         status = a.get('status')
@@ -1034,17 +1034,17 @@ class AppConfig(QObject):
             self.feature_update_service_automatic.set_value(*get_feature_config_remote('UPDATE_SERVICE_AUTOMATIC'))
             self.feature_revoke_operator_automatic.set_value(*get_feature_config_remote('REVOKE_OPERATOR_AUTOMATIC'))
 
-    def read_dash_network_app_params(self, dashd_intf):
-        """ Read parameters having impact on the app's behavior (sporks/dips) from the Dash network. Called
+    def read_fix_network_app_params(self, fixd_intf):
+        """ Read parameters having impact on the app's behavior (sporks/dips) from the FIX network. Called
         after connecting to the network. """
         pass
 
     def get_default_protocol(self) -> int:
         prot = None
         if self._remote_app_params:
-            dp = self._remote_app_params.get('defaultDashdProtocol')
+            dp = self._remote_app_params.get('defaultFixdProtocol')
             if dp:
-                prot = dp.get(self.dash_network.lower())
+                prot = dp.get(self.fix_network.lower())
         return prot
 
     def value_to_bool(self, value, default=None):
@@ -1118,7 +1118,7 @@ class AppConfig(QObject):
                 if isinstance(l, logging.Logger):
                     l.setLevel(level)
         else:
-            # setting-up log level of external (non-dmt) loggers to avoid cluttering the log file
+            # setting-up log level of external (non-fixmt) loggers to avoid cluttering the log file
             for lname in get_known_loggers():
                 if lname.external:
                     l = logging.getLogger(lname.name)
@@ -1131,38 +1131,38 @@ class AppConfig(QObject):
             self.log_handler.setFormatter(formatter)
 
     def is_config_complete(self):
-        for cfg in self.dash_net_configs:
+        for cfg in self.fix_net_configs:
             if cfg.enabled:
                 return True
         return False
 
     def prepare_conn_list(self):
         """
-        Prepare list of enabled connections for connecting to dash network. 
-        :return: list of DashNetworkConnectionCfg objects order randomly (random_dash_net_config == True) or according 
+        Prepare list of enabled connections for connecting to fix network. 
+        :return: list of FixNetworkConnectionCfg objects order randomly (random_fix_net_config == True) or according 
             to order in configuration
         """
         tmp_list = []
-        for cfg in self.dash_net_configs:
+        for cfg in self.fix_net_configs:
             if cfg.enabled and self.is_testnet() == cfg.testnet:
                 tmp_list.append(cfg)
-        if self.random_dash_net_config:
+        if self.random_fix_net_config:
             ordered_list = []
             while len(tmp_list):
                 idx = randint(0, len(tmp_list)-1)
                 ordered_list.append(tmp_list[idx])
                 del tmp_list[idx]
-            self.active_dash_net_configs = ordered_list
+            self.active_fix_net_configs = ordered_list
         else:
-            self.active_dash_net_configs = tmp_list
+            self.active_fix_net_configs = tmp_list
 
     def get_ordered_conn_list(self):
-        if not self.active_dash_net_configs:
+        if not self.active_fix_net_configs:
             self.prepare_conn_list()
-        return self.active_dash_net_configs
+        return self.active_fix_net_configs
 
     def conn_config_changed(self):
-        self.active_dash_net_configs = []
+        self.active_fix_net_configs = []
         self.defective_net_configs = []
 
     def conn_cfg_failure(self, cfg):
@@ -1174,9 +1174,9 @@ class AppConfig(QObject):
         """
         self.defective_net_configs.append(cfg)
 
-    def decode_connections(self, raw_conn_list) -> List['DashNetworkConnectionCfg']:
+    def decode_connections(self, raw_conn_list) -> List['FixNetworkConnectionCfg']:
         """
-        Decodes list of dicts describing connection to a list of DashNetworkConnectionCfg objects.
+        Decodes list of dicts describing connection to a list of FixNetworkConnectionCfg objects.
         :param raw_conn_list: 
         :return: list of connection objects
         """
@@ -1185,7 +1185,7 @@ class AppConfig(QObject):
             try:
                 if 'use_ssh_tunnel' in conn_raw and 'host' in conn_raw and 'port' in conn_raw and \
                    'username' in conn_raw and 'password' in conn_raw and 'use_ssl' in conn_raw:
-                    cfg = DashNetworkConnectionCfg('rpc')
+                    cfg = FixNetworkConnectionCfg('rpc')
                     cfg.use_ssh_tunnel = conn_raw['use_ssh_tunnel']
                     cfg.host = conn_raw['host']
                     cfg.port = conn_raw['port']
@@ -1225,7 +1225,7 @@ class AppConfig(QObject):
                 'ssh_user': str, non-mandatory
             },
         ]
-        :return: list of DashNetworkConnectionCfg objects or None if there was an error while importing
+        :return: list of FixNetworkConnectionCfg objects or None if there was an error while importing
         """
         try:
             conns_json = conns_json.strip()
@@ -1264,7 +1264,7 @@ class AppConfig(QObject):
         Imports connections from a list. Used at the app's start to process default connections and/or from
           a configuration dialog, when user pastes from a clipboard a string, describing connections he 
           wants to add to the configuration. The latter feature is used for a convenience.
-        :param in_conns: list of DashNetworkConnectionCfg objects.
+        :param in_conns: list of FixNetworkConnectionCfg objects.
         :returns: tuple (list_of_added_connections, list_of_updated_connections)
         """
 
@@ -1275,15 +1275,15 @@ class AppConfig(QObject):
             # the same for testnet
             mainnet_conn_count = 0
             testnet_conn_count = 0
-            for conn in self.dash_net_configs:
+            for conn in self.fix_net_configs:
                 if conn.testnet:
                     testnet_conn_count += 1
                 else:
                     mainnet_conn_count += 1
 
             for nc in in_conns:
-                if (self.dash_network == 'MAINNET' and nc.testnet == False) or \
-                   (self.dash_network == 'TESTNET' and nc.testnet == True) or not limit_to_network:
+                if (self.fix_network == 'MAINNET' and nc.testnet == False) or \
+                   (self.fix_network == 'TESTNET' and nc.testnet == True) or not limit_to_network:
                     id = nc.get_conn_id()
                     # check if new connection is in existing list
                     conn = self.get_conn_cfg_by_id(id)
@@ -1292,7 +1292,7 @@ class AppConfig(QObject):
                                                                    False, bool) or \
                            (testnet_conn_count == 0 and nc.testnet) or  (mainnet_conn_count == 0 and nc.mainnet):
                             # this new connection was not automatically imported before
-                            self.dash_net_configs.append(nc)
+                            self.fix_net_configs.append(nc)
                             added_conns.append(nc)
                             app_cache.set_value('imported_default_conn_' + nc.get_conn_id(), True)
                     elif not conn.identical(nc) and force_import:
@@ -1302,11 +1302,11 @@ class AppConfig(QObject):
 
     def get_conn_cfg_by_id(self, id):
         """
-        Returns DashNetworkConnectionCfg object by its identifier or None if does not exists.
+        Returns FixNetworkConnectionCfg object by its identifier or None if does not exists.
         :param id: Identifier of the sought connection.
-        :return: DashNetworkConnectionCfg object or None if does not exists.
+        :return: FixNetworkConnectionCfg object or None if does not exists.
         """
-        for conn in self.dash_net_configs:
+        for conn in self.fix_net_configs:
             if conn.get_conn_id() == id:
                 return conn
         return None
@@ -1345,32 +1345,32 @@ class AppConfig(QObject):
         return modified
 
     def is_testnet(self) -> bool:
-        return self.dash_network == 'TESTNET'
+        return self.fix_network == 'TESTNET'
 
     def is_mainnet(self) -> bool:
-        return self.dash_network == 'MAINNET'
+        return self.fix_network == 'MAINNET'
 
     @property
     def hw_coin_name(self):
         if self.is_testnet():
-            return 'Dash Testnet'
+            return 'FIX Testnet'
         else:
-            return 'Dash'
+            return 'Fix'
 
     def get_block_explorer_tx(self):
-        if self.dash_network == 'MAINNET':
+        if self.fix_network == 'MAINNET':
             return self.block_explorer_tx_mainnet
         else:
             return self.block_explorer_tx_testnet
 
     def get_block_explorer_addr(self):
-        if self.dash_network == 'MAINNET':
+        if self.fix_network == 'MAINNET':
             return self.block_explorer_addr_mainnet
         else:
             return self.block_explorer_addr_testnet
 
     def get_tx_api_url(self):
-        if self.dash_network == 'MAINNET':
+        if self.fix_network == 'MAINNET':
             return self.tx_api_url_mainnet
         else:
             return self.tx_api_url_testnet
@@ -1428,7 +1428,7 @@ class MasternodeConfig:
     def __init__(self):
         self.name = ''
         self.__ip = ''
-        self.__port = '9999'
+        self.__port = '17464'
         self.__collateralBip32Path = ''
         self.__collateralAddress = ''
         self.__collateralTx = ''
@@ -1678,13 +1678,13 @@ class MasternodeConfig:
             raise Exception('Invalid voting key type')
         self.__dmn_voting_key_type = type
 
-    def get_current_key_for_voting(self, app_config: AppConfig, dashd_intf):
+    def get_current_key_for_voting(self, app_config: AppConfig, fixd_intf):
         return self.dmn_voting_private_key
 
-    def get_dmn_owner_public_address(self, dash_network) -> Optional[str]:
+    def get_dmn_owner_public_address(self, fix_network) -> Optional[str]:
         if self.__dmn_owner_key_type == InputKeyType.PRIVATE:
             if self.__dmn_owner_private_key:
-                address = dash_utils.wif_privkey_to_address(self.__dmn_owner_private_key, dash_network)
+                address = fix_utils.wif_privkey_to_address(self.__dmn_owner_private_key, fix_network)
                 return address
         else:
             if self.__dmn_owner_address:
@@ -1694,21 +1694,21 @@ class MasternodeConfig:
     def get_dmn_owner_pubkey_hash(self) -> Optional[str]:
         if self.dmn_owner_key_type == InputKeyType.PRIVATE:
             if self.__dmn_owner_private_key:
-                pubkey = dash_utils.wif_privkey_to_pubkey(self.__dmn_owner_private_key)
+                pubkey = fix_utils.wif_privkey_to_pubkey(self.__dmn_owner_private_key)
                 pubkey_bin = bytes.fromhex(pubkey)
                 pub_hash = bitcoin.bin_hash160(pubkey_bin)
                 return pub_hash.hex()
         else:
             if self.__dmn_owner_address:
-                ret = dash_utils.address_to_pubkey_hash(self.__dmn_owner_address)
+                ret = fix_utils.address_to_pubkey_hash(self.__dmn_owner_address)
                 if ret:
                     return ret.hex()
         return ''
 
-    def get_dmn_voting_public_address(self, dash_network) -> Optional[str]:
+    def get_dmn_voting_public_address(self, fix_network) -> Optional[str]:
         if self.__dmn_voting_key_type == InputKeyType.PRIVATE:
             if self.__dmn_voting_private_key:
-                address = dash_utils.wif_privkey_to_address(self.__dmn_voting_private_key, dash_network)
+                address = fix_utils.wif_privkey_to_address(self.__dmn_voting_private_key, fix_network)
                 return address
         else:
             if self.__dmn_voting_address:
@@ -1718,13 +1718,13 @@ class MasternodeConfig:
     def get_dmn_voting_pubkey_hash(self) -> Optional[str]:
         if self.__dmn_voting_key_type == InputKeyType.PRIVATE:
             if self.__dmn_voting_private_key:
-                pubkey = dash_utils.wif_privkey_to_pubkey(self.__dmn_voting_private_key)
+                pubkey = fix_utils.wif_privkey_to_pubkey(self.__dmn_voting_private_key)
                 pubkey_bin = bytes.fromhex(pubkey)
                 pub_hash = bitcoin.bin_hash160(pubkey_bin)
                 return pub_hash.hex()
         else:
             if self.__dmn_voting_address:
-                ret = dash_utils.address_to_pubkey_hash(self.__dmn_voting_address)
+                ret = fix_utils.address_to_pubkey_hash(self.__dmn_voting_address)
                 if ret:
                     return ret.hex()
         return ''
@@ -1732,7 +1732,7 @@ class MasternodeConfig:
     def get_dmn_operator_pubkey(self) -> Optional[str]:
         if self.__dmn_operator_key_type == InputKeyType.PRIVATE:
             if self.__dmn_operator_private_key:
-                pubkey = dash_utils.bls_privkey_to_pubkey(self.__dmn_operator_private_key)
+                pubkey = fix_utils.bls_privkey_to_pubkey(self.__dmn_operator_private_key)
                 return pubkey
         else:
             return self.__dmn_operator_public_key
@@ -1779,7 +1779,7 @@ class SSHConnectionCfg(object):
         self.__password = password
 
 
-class DashNetworkConnectionCfg(object):
+class FixNetworkConnectionCfg(object):
     def __init__(self, method):
         self.__enabled = True
         self.method = method    # now only 'rpc'
@@ -1820,7 +1820,7 @@ class DashNetworkConnectionCfg(object):
     def identical(self, cfg2):
         """
         Checks if connection object passed as an argument has exactly the same values as self object.
-        :param cfg2: DashNetworkConnectionCfg object to compare
+        :param cfg2: FixNetworkConnectionCfg object to compare
         :return: True, if objects have identical attributes.
         """
         return self.host == cfg2.host and self.port == cfg2.port and self.username == cfg2.username and \
@@ -1833,7 +1833,7 @@ class DashNetworkConnectionCfg(object):
             self.__rpc_encryption_pubkey_der == cfg2.__rpc_encryption_pubkey_der
 
     def __deepcopy__(self, memodict):
-        newself = DashNetworkConnectionCfg(self.method)
+        newself = FixNetworkConnectionCfg(self.method)
         newself.copy_from(self)
         return newself
 
@@ -1861,7 +1861,7 @@ class DashNetworkConnectionCfg(object):
     def is_http_proxy(self):
         """
         Returns if current config is a http proxy. Method is not very brilliant for now: we assume, that 
-        proxy uses SSL while normal, "local" dashd does not. 
+        proxy uses SSL while normal, "local" fixd does not. 
         """
         if self.__use_ssl:
             return True

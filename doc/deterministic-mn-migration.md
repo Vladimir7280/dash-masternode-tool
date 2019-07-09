@@ -12,11 +12,11 @@ The scope covered in this document applies only to what directly relates
 to the DMT functionalities and it focuses on the migration from
 nondeterministic to deterministic (DIP3) masternodes. To get familiar
 with a broader context in this matter, read the following document:
-[Dash 0.13 Upgrade Procedure](https://docs.dash.org/en/stable/masternodes/dip3-upgrade.html#masternode-registration-from-dmt),
+[FIX 0.13 Upgrade Procedure](https://docs.fix.org/en/stable/masternodes/dip3-upgrade.html#masternode-registration-from-fixmt),
 which I highly recommend.
 
 It's worth noting here, that this process can be performed completely
-independently from DMT (using the Dash Core wallet), however, the
+independently from DMT (using the FIX Core wallet), however, the
 inclusion of this function in DMT is aimed at the maximum facilitation
 of this process.
 
@@ -26,29 +26,29 @@ of this process.
   * [DMN registration methods](#dmn-registration-methods) 
     * [Automatic method using "public" RPC nodes](#automatic-method-using-public-rpc-nodes-m1)
     * [Automatic method using own RPC node](#automatic-method-using-own-rpc-node-m2)
-    * [Manual method using own Dash node](#manual-method-using-own-dash-node-m3)
+    * [Manual method using own FIX node](#manual-method-using-own-fix-node-m3)
   * [FAQ](#faq)
 
 ### Glossary
-**DIP3**: Dash blockchain parameter, enabling the Deterministic
+**DIP3**: FIX blockchain parameter, enabling the Deterministic
 Masternode Lists (**DML**) feature. On mainnet it has been activated
 with the block 1,028,160 being mined. From that moment, you can start
 adding masternodes to DML, however the new list will not be used until
 **Spork 15** is activated.
 
-**Spork 15**: a parameter causing the Dash network to switch from the
+**Spork 15**: a parameter causing the FIX network to switch from the
 old (non-deterministic) masternode list to DML. The exact date of the
 activation of Spork 15 is not currently known - it will mostly depend on
 the pace of **DIP3** adoption among masternodes. The most probable
 moment for this to happen is when about 80% of masternodes are added to
-DML, but the final decision will be made by the _Dash Core Group_
+DML, but the final decision will be made by the _FIX Core Group_
 members, who will choose the most optimal timing for this.
 
 **ProRegTx**: type of special transaction related to the registration of
 deterministic masternodes.
 
-**RPC node**: a Dash node providing an interface for external apps to
-communicate with the Dash network. DashMasternodeTool (**DMT**) requires
+**RPC node**: a FIX node providing an interface for external apps to
+communicate with the FIX network. FixMasternodeTool (**DMT**) requires
 connection with such node to carry out the most of its
 functionalities.
 
@@ -97,14 +97,14 @@ ones:
 ## DMN registration methods
 * [Automatic method using "public" RPC nodes (M1)](#automatic-method-using-public-rpc-nodes-m1) 
 * [Automatic method using own RPC node (M2)](#automatic-method-using-own-rpc-node-m2) 
-* [Manual method using own Dash node (M3)](#manual-method-using-own-dash-node-m3)
+* [Manual method using own FIX node (M3)](#manual-method-using-own-fix-node-m3)
 
 In the automatic method, the majority of activities are performed by DMT
 "in the background" and the required user interaction basically boils
 down to clicking the **Continue** button.
 
 On the other hand, the manual method requires executing commands from
-the Dash Core debug console and copying the results back to DMT, so it
+the FIX Core debug console and copying the results back to DMT, so it
 is dedicated to more advanced users, who are not afraid of
 using a terminal-type user interface.
 
@@ -112,15 +112,15 @@ using a terminal-type user interface.
 Each method has its pros and cons that you can read about in individual
 chapters, but here are some tips to help you choose the best method for
 you :
-- If you have your own Dash Core synchronized with the network with 
+- If you have your own FIX Core synchronized with the network with 
   enabled RPC and indexing, choose either
   [Automatic method using own RPC node](#automatic-method-using-own-rpc-node-m2)
   or
-  [Manual method using own Dash node](#manual-method-using-own-dash-node-m3).
-- If you have your own Dash Core synchronized with the network but
+  [Manual method using own FIX node](#manual-method-using-own-fix-node-m3).
+- If you have your own FIX Core synchronized with the network but
   without the RPC interface or indexing enabled, choose
-  [Manual method using own Dash node](#manual-method-using-own-dash-node-m3).
-- If you do not have and you can not easily run Dash Core (for example,
+  [Manual method using own FIX node](#manual-method-using-own-fix-node-m3).
+- If you do not have and you can not easily run FIX Core (for example,
   you don't have disk space for blockchain data) or you feel
   uncomfortable using a terminal-type user interface, choose
   [Automatic method using "public" RPC nodes](#automatic-method-using-public-rpc-nodes-m1).
@@ -130,14 +130,14 @@ The advantage of this method is its simplicity but the disadvantage is
 the need to send the owner private key to the remote RPC node. This key
 is necessary to sign the payload data being part of the ProRegTx
 transaction, which is created on the remote node
-([details](https://github.com/dashpay/dips/blob/master/dip-0003.md#registering-a-masternode-proregtx)).
+([details](https://github.com/fixpay/dips/blob/master/dip-0003.md#registering-a-masternode-proregtx)).
 If this raises your concerns (eg. you do not trust the RPC node
 operator), choose another method.
 
 >  **Note 1.** The RPC nodes preconfigured in DMT (alice, luna, suzy)
 >  are managed by the author of the DMT application (ie by me). For my
 >  part, I can ensure that no sensitive information (such as private
->  keys) is logged anywhere. All parameters are passed to the Dash
+>  keys) is logged anywhere. All parameters are passed to the Fix
 >  daemon, and after signing the transaction they disappear.
 
 
@@ -145,12 +145,12 @@ operator), choose another method.
 >  wrong hands? Taking into possesion of this key does not allow
 >  collateral theft (which is controlled by hardware wallet), but may
 >  have some financial aspect. Namely, it allows sending a
->  [ProUpRegTx](https://github.com/dashpay/dips/blob/master/dip-0003.md#updating-registrar-of-masternode-proupregtx)
+>  [ProUpRegTx](https://github.com/fixpay/dips/blob/master/dip-0003.md#updating-registrar-of-masternode-proupregtx)
 >  transaction, which allows to change the payout address. In an extreme
 >  case, you may then lose your masternode reward - one or a few -
 >  depending on when you would notice the change. Protection against
 >  this is quite simple - it is enough to monitor changes in the payout
->  address and owner key using data available on the Dash network. This
+>  address and owner key using data available on the FIX network. This
 >  feature is implemented in DMT under the **Get status** button. If
 >  there is a change in relation to the data stored in the
 >  configuration, a warning will be displayed. If something like that
@@ -169,8 +169,8 @@ the main DMT window.
 > Note, the **Send ProRegTx** button is only visible if the DIP3
 > parameter is active. If you are sure that this is the case and the
 > button is still not visible, make DMT to establish the connection with
-> the Dash network to force it to read the current network parameters.
-> You can do this by clicking the **Check Dash Network Connection**
+> the FIX network to force it to read the current network parameters.
+> You can do this by clicking the **Check FIX Network Connection**
 > toolbar button.
 
 
@@ -209,14 +209,14 @@ Other actions in this step depend on your use case:
 After completing the data, click **Continue**.
 
 #### Step 4. Select the registration method 
-Click the option **Remote Dash RPC Node (automatic method)**
+Click the option **Remote FIX RPC Node (automatic method)**
 
 ![Method](img/dmn/wizard-page2-automatic.png)
 
 then click **Continue**
 
 #### Step 5. Confirm the message signing operation on your hardware wallet  
-At this step, the wizard executes two operations on the remote Dash node
+At this step, the wizard executes two operations on the remote FIX node
 (**register_prepare** and **register_submit**), between which you will
 be asked to sign a special message with the hardware wallet controlling
 the masternode collateral. The resulting signature is supposed to prove
@@ -239,8 +239,8 @@ file.
 
 The last thing to do here depends on your use case:
 * **UC1**: as suggested on the screen, copy the `masternodeblsprivkey =
-  ...` line into the dash.conf file on the server running your
-  masternode, then restart the dashd daemon..
+  ...` line into the fix.conf file on the server running your
+  masternode, then restart the fixd daemon..
 * **UC2**: your operator should carry out the above-mentioned operation
   by himself , so in this case you don't need to do anything.
 
@@ -257,10 +257,10 @@ The process has come to an end at this point.
 
 ## Automatic method using own RPC node (M2)
 This method works identically to the M1 method, but utilizes your own
-RPC node to interact with the Dash network. Its advantage is that the
+RPC node to interact with the FIX network. Its advantage is that the
 owner private key (which needs to be sent to the node) is under your
 control all the time. The drawback of this method is the need to prepare
-your own Dash full node with enabled RPC interface and the address
+your own FIX full node with enabled RPC interface and the address
 indexing being enabled.
 
 #### Step 1. Configure your own RPC node
@@ -272,7 +272,7 @@ Remember to configure a connection between DMT and your RPC node and to
 turn off all others.
 
 > Note, that the RPC node has nothing to do with your masternode - this
-> may be your local Dash Core instance, and that's actually the most
+> may be your local FIX Core instance, and that's actually the most
 > convenient and safe way in this scenario.
 
 #### Step 2. Prepare funds to cover transaction fees
@@ -288,15 +288,15 @@ Follow the steps:
 [Automatic method using "public" RPC nodes](#automatic-method-using-public-rpc-nodes-m1)
 
 
-## Manual method using own Dash node (M3)
+## Manual method using own FIX node (M3)
 The advantage of this method is that no private keys go outside your
 computer and that to perform the steps it's enough to have access to a
-Dash Core wallet, not necessarily with the RPC interface and indexing
+FIX Core wallet, not necessarily with the RPC interface and indexing
 enabled. The disadvantage is the need to manually execute some commands
-from the Dash Core debug console, which may not be very comfortable for
+from the FIX Core debug console, which may not be very comfortable for
 some people.
 
-#### Step 1. Install Dash Core and synchronize it with the network
+#### Step 1. Install FIX Core and synchronize it with the network
 
 #### Step 2. Prepare funds to cover transaction fees
 See:
@@ -310,7 +310,7 @@ See:
 See: [Verify and update the data if necessary](#step-3-verify-and-update-the-data-if-necessary)
 
 #### Step 5. Select the registratin method 
-Click the option **Your own Dash-Qt wallet (manual method)**
+Click the option **Your own Fix-Qt wallet (manual method)**
  
 ![Config - deterministic](img/dmn/wizard-page2-manual.png)  
 
@@ -329,7 +329,7 @@ necessary parameters.
 
 Hint: you can use the **Copy** button on the right.
   
-#### Step 8. Execute the command in the Dash Core debug console
+#### Step 8. Execute the command in the FIX Core debug console
 Paste the command into the and edit box at the bottom of Debug console
 then press **Enter**.
   
@@ -353,7 +353,7 @@ necessary parameters.
 
 Hint: you can use the **Copy** button on the right.
  
-#### Step 12. Execute the command in the Dash Core debug console
+#### Step 12. Execute the command in the FIX Core debug console
   
 #### Step 13. Copy the protx transaction number resulting from the command
 ![Protx tx hash](img/dmn/wizard-page3-manual-f.png)
@@ -380,15 +380,15 @@ following:
   
 #### Can I modify the payout address without resetting the place in the payment queue?
 Yes, you can do it. For this, you must send a **ProUpRegTx** transaction
-from Dash Core - as of now, DMT does not have a user interface
+from FIX Core - as of now, DMT does not have a user interface
 supporting this functionality, so you will need to manually execute
-commands from the Dash Core Debug console.
+commands from the FIX Core Debug console.
 
 **Here are the steps**
-1. Start Dash Core wallet and wait for it to synchronize with the
+1. Start FIX Core wallet and wait for it to synchronize with the
    network
 
-2. Import the owner private key to the Dash Core wallet if you have not done it
+2. Import the owner private key to the FIX Core wallet if you have not done it
    before
    
     2.1. If your wallet is protected by passphrase (recommended), unlock
@@ -404,7 +404,7 @@ commands from the Dash Core Debug console.
     
 3. Send an update registrar transaction (**ProUpRegTx**)
     
-    3.1. Find an address in Dash Core you are going to cover transaction 
+    3.1. Find an address in FIX Core you are going to cover transaction 
     fees from. The address you choose, will be used as the **feeSourceAddress** 
     parameter in next steps. To list addresses with their balances, execute the 
     following command:  
@@ -417,8 +417,8 @@ commands from the Dash Core Debug console.
     button on the right, then copy the public key from the corresponding 
     edit box
     - `votingAddress`: change the **Voting private key** view type to
-    **Dash address**, using the context menu associated with the "eye" 
-    button on the right, then copy the Dash address from the corresponding 
+    **FIX address**, using the context menu associated with the "eye" 
+    button on the right, then copy the FIX address from the corresponding 
     edit box
 
     3.3. Execute the update registrar command from the Debug console 
@@ -437,12 +437,12 @@ ready to provide services again. This is done using the **ProUpServTx**
 transaction.
 
 **Here are the steps**
-1. Start Dash Core wallet and wait for it to synchronize with the
+1. Start FIX Core wallet and wait for it to synchronize with the
    network
 
 2. Send an update registrar transaction (**ProUpServTx**)
 
-    2.1. Find an address in Dash Core you are going to cover transaction
+    2.1. Find an address in FIX Core you are going to cover transaction
     fees from. The address you choose, will be used as the
     **feeSourceAddress** parameter in next steps. To list addresses
     with their balances, execute the following command:  
@@ -455,7 +455,7 @@ transaction.
     - `operatorKey`: copy the value from **Operator private key** edit 
     box
 
-    2.3. Execute the update service command from the Dash Core Debug
+    2.3. Execute the update service command from the FIX Core Debug
     console  
     `protx update_service "protxHash" "ipAndPort" "operatorKey"
     "operatorPayoutAddress" "feeSourceAddress"`

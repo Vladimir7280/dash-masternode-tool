@@ -3,7 +3,7 @@
  * [Introduction](#introduction)
  * [Understanding the *recovery seed*](#understanding-the-recovery-seed)
  * [Security principles](#security-principles)
- * [Hardware wallet initialization and recovery in DMT](#hardware-wallet-initialization-and-recovery-in-dmt)
+ * [Hardware wallet initialization and recovery in DMT](#hardware-wallet-initialization-and-recovery-in-fixmt)
     * [Hardware wallet recovery - safe mode](hw-initr-safe-mode.md)
     * [Hardware wallet recovery - convenient mode](hw-initr-conv-mode.md)
     * [Hardware wallet recovery from hexadecimal entropy](hw-initr-entropy-mode.md)
@@ -21,7 +21,7 @@ Hardware wallets must be properly prepared for operation before first use. This 
 - Recovery: a process that consists of restoring an existing set of keys (and addresses) that have previously been used, e.g. in another hardware or software wallet. This method is usually used when the previous device has failed, or we are simply "migrating our funds" to another device.
 
 
-Although both scenarios are supported in the official applications provided by the device manufacturers, there is a good reason to also implement this functionality in Dash Masternode Tool. This is because, despite its numerous advantages, Trezor - by far the most popular hardware wallet - has one drawback: the official client application is a web-based solution, so an internet connection is required for it to work. It is therefore impossible to initialize a Trezor on an offline computer, despite this being highly recommended considering the prevalence of malware and the potentially significant funds often managed using hardware wallets. It is also a valuable backup in case the [https://wallet.trezor.io](https://wallet.trezor.io/) website is ever unavailable for any reason, making it impossible to perform initialization or recovery, if only for a limited time.
+Although both scenarios are supported in the official applications provided by the device manufacturers, there is a good reason to also implement this functionality in FIX Masternode Tool. This is because, despite its numerous advantages, Trezor - by far the most popular hardware wallet - has one drawback: the official client application is a web-based solution, so an internet connection is required for it to work. It is therefore impossible to initialize a Trezor on an offline computer, despite this being highly recommended considering the prevalence of malware and the potentially significant funds often managed using hardware wallets. It is also a valuable backup in case the [https://wallet.trezor.io](https://wallet.trezor.io/) website is ever unavailable for any reason, making it impossible to perform initialization or recovery, if only for a limited time.
 
 ## Understanding the *recovery seed*
 

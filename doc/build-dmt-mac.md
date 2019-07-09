@@ -1,6 +1,6 @@
-## Building the Dash Masternode Tool executable on macOS
+## Building the FIX Masternode Tool executable on macOS
 
-You can build Dash Masternode Tool for macOS by opening the Terminal app and running the following commands:
+You can build FIX Masternode Tool for macOS by opening the Terminal app and running the following commands:
 
 * Install *Homebrew*:
 
@@ -39,34 +39,34 @@ You can build Dash Masternode Tool for macOS by opening the Terminal app and run
   mkdir projects
   mkdir projects/virtualenvs
   cd projects/virtualenvs
-  virtualenv -p python3 dmt
+  virtualenv -p python3 fixmt
   ```
 
 * Activate the new virtual environment:
 
   ```
-  source dmt/bin/activate
+  source fixmt/bin/activate
   ```
 
 * Download the DMT source from GitHub:
 
   ```
   cd ~/projects
-  git clone https://github.com/Bertrand256/dash-masternode-tool
+  git clone https://github.com/Bertrand256/fix-masternode-tool
   ```
 
 * Install the DMT Python requirements:
 
   ```
-  cd dash-masternode-tool
+  cd fix-masternode-tool
   pip install -r requirements.txt
   ```
 
 * Build the DMT executable:
 
   ```
-  pyinstaller --distpath=../dist/mac --workpath=../build/mac dash_masternode_tool.spec
+  pyinstaller --distpath=../dist/mac --workpath=../build/mac fix_masternode_tool.spec
   ```
 
 
-Once the build has completed successfully, a compressed macOS executable file will be created in the ***~/projects/dist/all*** directory. An uncompressed app package (*DashMasternodeTool.app*) can be found in the ***~/projects/dist/mac*** directory.
+Once the build has completed successfully, a compressed macOS executable file will be created in the ***~/projects/dist/all*** directory. An uncompressed app package (*FixMasternodeTool.app*) can be found in the ***~/projects/dist/mac*** directory.

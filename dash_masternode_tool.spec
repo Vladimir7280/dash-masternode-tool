@@ -58,7 +58,7 @@ elif os_type == 'win32':
     if l:
         add_binary_file(l, '.')
 
-a = Analysis(['src/dash_masternode_tool.py'],
+a = Analysis(['src/fix_masternode_tool.py'],
              pathex=[base_dir],
              binaries=binary_files,
              datas=data_files,
@@ -78,17 +78,17 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='DashMasternodeTool',
+          name='FixMasternodeTool',
           debug=False,
           strip=False,
           upx=False,
           console=False,
-		  icon=os.path.join('img',('dmt.%s' % ('icns' if os_type=='darwin' else 'ico'))))
+		  icon=os.path.join('img',('fixmt.%s' % ('icns' if os_type=='darwin' else 'ico'))))
 
 if os_type == 'darwin':
     app = BUNDLE(exe,
-                 name='DashMasternodeTool.app',
-                 icon='img/dmt.icns',
+                 name='FixMasternodeTool.app',
+                 icon='img/fixmt.icns',
                  bundle_identifier=None,
                      info_plist={
                         'NSHighResolutionCapable': 'True'
@@ -107,10 +107,10 @@ os.chdir(dist_path)
 
 if os_type == 'win32':
     print('Compressing Windows executable')
-    os.system('"7z.exe" a %s %s -mx0' % (os.path.join(all_bin_dir, 'DashMasternodeTool_' + version_str + '.win' + no_bits + '.zip'),  'DashMasternodeTool.exe'))
+    os.system('"7z.exe" a %s %s -mx0' % (os.path.join(all_bin_dir, 'FixMasternodeTool_' + version_str + '.win' + no_bits + '.zip'),  'FixMasternodeTool.exe'))
 elif os_type == 'darwin':
     print('Compressing Mac executable')
-    os.system('zip -r "%s" "%s"' % (os.path.join(all_bin_dir, 'DashMasternodeTool_' + version_str + '.mac.zip'),  'DashMasternodeTool.app'))
+    os.system('zip -r "%s" "%s"' % (os.path.join(all_bin_dir, 'FixMasternodeTool_' + version_str + '.mac.zip'),  'FixMasternodeTool.app'))
 elif os_type == 'linux':
     print('Compressing Linux executable')
-    os.system('tar -zcvf %s %s' % (os.path.join(all_bin_dir, 'DashMasternodeTool_' + version_str + '.linux.tar.gz'),  'DashMasternodeTool'))
+    os.system('tar -zcvf %s %s' % (os.path.join(all_bin_dir, 'FixMasternodeTool_' + version_str + '.linux.tar.gz'),  'FixMasternodeTool'))

@@ -6,10 +6,10 @@ import collections
 import logging
 from typing import List
 
-APP_NAME_SHORT = 'DashMasternodeTool'
-APP_NAME_LONG = 'Dash Masternode Tool'
-APP_DATA_DIR_NAME = '.dmt'
-PROJECT_URL = 'https://github.com/Bertrand256/dash-masternode-tool'
+APP_NAME_SHORT = 'FixMasternodeTool'
+APP_NAME_LONG = 'FIX Masternode Tool'
+APP_DATA_DIR_NAME = '.fixmt'
+PROJECT_URL = 'https://github.com/Bertrand256/fix-masternode-tool'
 FEE_DUFF_PER_BYTE = 1
 MIN_TX_FEE = 1000
 SCREENSHOT_MODE = False
@@ -55,16 +55,16 @@ def get_doc_url(doc_file_name):
 
 
 __KNOWN_LOGGERS = [
-    KnownLoggerType(name='dmt.wallet_dlg', external=False),
-    KnownLoggerType(name='dmt.bip44_wallet', external=False),
-    KnownLoggerType(name='dmt.dashd_intf', external=False),
-    KnownLoggerType(name='dmt.db_intf', external=False),
-    KnownLoggerType(name='dmt.proposals', external=False),
-    KnownLoggerType(name='dmt.ext_item_model', external=False),
-    KnownLoggerType(name='dmt.hw_intf_trezor', external=False),
-    KnownLoggerType(name='dmt.reg_masternode', external=False),
-    KnownLoggerType(name='dmt.transaction_dlg', external=False),
-    KnownLoggerType(name='dmt.app_cache', external=False),
+    KnownLoggerType(name='fixmt.wallet_dlg', external=False),
+    KnownLoggerType(name='fixmt.bip44_wallet', external=False),
+    KnownLoggerType(name='fixmt.fixd_intf', external=False),
+    KnownLoggerType(name='fixmt.db_intf', external=False),
+    KnownLoggerType(name='fixmt.proposals', external=False),
+    KnownLoggerType(name='fixmt.ext_item_model', external=False),
+    KnownLoggerType(name='fixmt.hw_intf_trezor', external=False),
+    KnownLoggerType(name='fixmt.reg_masternode', external=False),
+    KnownLoggerType(name='fixmt.transaction_dlg', external=False),
+    KnownLoggerType(name='fixmt.app_cache', external=False),
     KnownLoggerType(name='BitcoinRPC', external=True),
     KnownLoggerType(name='urllib3.connectionpool', external=True),
     KnownLoggerType(name='trezorlib.transport', external=True),

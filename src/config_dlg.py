@@ -17,8 +17,8 @@ from cryptography.hazmat.primitives import serialization
 
 import app_config
 import app_cache
-from app_config import AppConfig, DashNetworkConnectionCfg
-from dashd_intf import DashdInterface, control_rpc_call
+from app_config import AppConfig, FixNetworkConnectionCfg
+from fixd_intf import FixdInterface, control_rpc_call
 from psw_cache import SshPassCache
 from ui.ui_config_dlg import Ui_ConfigDlg
 from ui.ui_conn_rpc_wdg import Ui_RpcConnection
@@ -58,11 +58,11 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
         self.local_config = AppConfig()
         self.local_config.copy_from(config)
 
-        # list of connections from self.local_config.dash_net_configs split on separate lists for mainnet and testnet
+        # list of connections from self.local_config.fix_net_configs split on separate lists for mainnet and testnet
         self.connections_mainnet = []
         self.connections_testnet = []
         self.connections_current = None
-        self.current_network_cfg : Optional[DashNetworkConnectionCfg] = None
+        self.current_network_cfg : Optional[FixNetworkConnectionCfg] = None
 
         # block ui controls -> cur config data copying while setting ui controls initial values
         self.disable_cfg_update = False
@@ -180,12 +180,12 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
             lambda: self.rpc_cfg_widget.edtRpcPassword.setEchoMode(QLineEdit.Password))
 
         if self.local_config.is_mainnet():
-            self.cboDashNetwork.setCurrentIndex(0)
+            self.cboFixNetwork.setCurrentIndex(0)
             self.connections_current = self.connections_mainnet
         else:
-            self.cboDashNetwork.setCurrentIndex(1)
+            self.cboFixNetwork.setCurrentIndex(1)
             self.connections_current = self.connections_testnet
-        for cfg in self.local_config.dash_net_configs:
+        for cfg in self.local_config.fix_net_configs:
             if cfg.testnet:
                 self.connections_testnet.append(cfg)
             else:
@@ -224,7 +224,7 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
         self.cboLogLevel.setCurrentIndex(idx)
 
         self.display_connection_list()
-        if len(self.local_config.dash_net_configs):
+        if len(self.local_config.fix_net_configs):
             self.lstConns.setCurrentRow(0)
 
         self.update_keepkey_pass_encoding_ui()
@@ -268,15 +268,15 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
         self.wdgKeepkeyPassEncoding.setVisible(self.local_config.hw_type == HWType.keepkey)
 
     @pyqtSlot(int)
-    def on_cboDashNetwork_currentIndexChanged(self, index):
+    def on_cboFixNetwork_currentIndexChanged(self, index):
         """Executed after changing configuration between MAINNET and TESTNET."""
         if not self.disable_cfg_update:
             if index == 0:
                 self.connections_current = self.connections_mainnet
-                self.local_config.dash_network = 'MAINNET'
+                self.local_config.fix_network = 'MAINNET'
             else:
                 self.connections_current = self.connections_testnet
-                self.local_config.dash_network = 'TESTNET'
+                self.local_config.fix_network = 'TESTNET'
             self.display_connection_list()
             self.set_modified()
             self.lstConns.setCurrentRow(0)
@@ -292,7 +292,7 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
             conns = self.local_config.decode_connections_json(clipboard.text())
             if isinstance(conns, list) and len(conns):
                 # disable the 'paste' action if the clipboard doesn't contain a JSON string describing a
-                # dash connection(s)
+                # fix connection(s)
                 self.action_paste_connections.setEnabled(True)
             else:
                 self.action_paste_connections.setEnabled(False)
@@ -329,12 +329,12 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
 
                     # update the main list containing connections configuration from separate  lists dedicated
                     # to mainnet and testnet - it'll be used by the import_connection method
-                    self.local_config.dash_net_configs.clear()
-                    self.local_config.dash_net_configs.extend(self.connections_mainnet)
-                    self.local_config.dash_net_configs.extend(self.connections_testnet)
+                    self.local_config.fix_net_configs.clear()
+                    self.local_config.fix_net_configs.extend(self.connections_mainnet)
+                    self.local_config.fix_net_configs.extend(self.connections_testnet)
 
                     added, updated = self.local_config.import_connections(
-                        conns, force_import=True, limit_to_network=self.local_config.dash_network)
+                        conns, force_import=True, limit_to_network=self.local_config.fix_network)
                     for cfg in added:
                         cfg.enabled = True
                     self.connections_current.extend(added)
@@ -352,17 +352,17 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
         if self.queryDlg('Do you really want to restore default connection(s)?',
                          buttons=QMessageBox.Yes | QMessageBox.Cancel,
                          default_button=QMessageBox.Yes, icon=QMessageBox.Information) == QMessageBox.Yes:
-            cfgs = self.local_config.decode_connections(default_config.dashd_default_connections)
+            cfgs = self.local_config.decode_connections(default_config.fixd_default_connections)
             if cfgs:
                 # update the main list containing connections configuration from separate  lists dedicated
                 # to mainnet and testnet - it'll be used by the import_connection method
-                self.local_config.dash_net_configs.clear()
-                self.local_config.dash_net_configs.extend(self.connections_mainnet)
-                self.local_config.dash_net_configs.extend(self.connections_testnet)
+                self.local_config.fix_net_configs.clear()
+                self.local_config.fix_net_configs.extend(self.connections_mainnet)
+                self.local_config.fix_net_configs.extend(self.connections_testnet)
 
                 # force import default connections if there is no any in the configuration
                 added, updated = self.local_config.import_connections(
-                    cfgs, force_import=True, limit_to_network=self.local_config.dash_network)
+                    cfgs, force_import=True, limit_to_network=self.local_config.fix_network)
                 self.connections_current.extend(added)
                 if added or updated:
                     row_selected = self.lstConns.currentRow()
@@ -411,8 +411,8 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
 
     @pyqtSlot()
     def on_action_new_connection_triggered(self):
-        cfg = DashNetworkConnectionCfg('rpc')
-        cfg.testnet = True if self.cboDashNetwork.currentIndex() == 1 else False
+        cfg = FixNetworkConnectionCfg('rpc')
+        cfg.testnet = True if self.cboFixNetwork.currentIndex() == 1 else False
         self.connections_current.append(cfg)
 
         # add config to the connections list:
@@ -576,7 +576,7 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
 
     def on_chbRandomConn_toggled(self, checked):
         if not self.disable_cfg_update:
-            self.local_config.random_dash_net_config = checked
+            self.local_config.random_fix_net_config = checked
             self.set_modified()
 
     def update_connection_details_ui(self):
@@ -630,7 +630,7 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
                 self.rpc_cfg_widget.setVisible(False)
                 self.btnEncryptionPublicKey.setVisible(False)
                 self.lblEncryptionPublicKey.setVisible(False)
-            self.chbRandomConn.setChecked(self.local_config.random_dash_net_config)
+            self.chbRandomConn.setChecked(self.local_config.random_fix_net_config)
         finally:
             self.disable_cfg_update = dis_old
 
@@ -717,7 +717,7 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
             self.set_modified()
 
     def on_btnSshReadRpcConfig_clicked(self):
-        """Read the configuration of a remote RPC node from the node's dash.conf file."""
+        """Read the configuration of a remote RPC node from the node's fix.conf file."""
         if self.current_network_cfg:
             host = self.current_network_cfg.ssh_conn_cfg.host
             port = self.current_network_cfg.ssh_conn_cfg.port
@@ -734,19 +734,19 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
                 username, ok = QInputDialog.getText(self, 'Username Dialog', 'Enter username for SSH connection:')
             if not ok or not username:
                 return
-            from dashd_intf import DashdSSH
-            ssh = DashdSSH(host, int(port), username)
+            from fixd_intf import FixdSSH
+            ssh = FixdSSH(host, int(port), username)
             try:
                 ssh.connect()
-                dashd_conf = ssh.find_dashd_config()
+                fixd_conf = ssh.find_fixd_config()
                 self.disable_cfg_update = True
-                if isinstance(dashd_conf, tuple) and len(dashd_conf) >= 3:
-                    if not dashd_conf[0]:
-                        self.infoMsg('Remore Dash daemon seems to be shut down')
-                    elif not dashd_conf[1]:
-                        self.infoMsg('Could not find remote dashd.conf file')
+                if isinstance(fixd_conf, tuple) and len(fixd_conf) >= 3:
+                    if not fixd_conf[0]:
+                        self.infoMsg('Remore FIX daemon seems to be shut down')
+                    elif not fixd_conf[1]:
+                        self.infoMsg('Could not find remote fixd.conf file')
                     else:
-                        file = dashd_conf[2]
+                        file = fixd_conf[2]
                         rpcuser = file.get('rpcuser', '')
                         rpcpassword = file.get('rpcpassword', '')
                         rpcport = file.get('rpcport', '9998')
@@ -769,18 +769,18 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
                             self.is_modified = modified
 
                         if file.get('server', '1') == '0':
-                            self.warnMsg("Remote dash.conf parameter 'server' is set to '0', so RPC interface will "
+                            self.warnMsg("Remote fix.conf parameter 'server' is set to '0', so RPC interface will "
                                          "not work.")
                         if not rpcuser:
-                            self.warnMsg("Remote dash.conf parameter 'rpcuser' is not set, so RPC interface will  "
+                            self.warnMsg("Remote fix.conf parameter 'rpcuser' is not set, so RPC interface will  "
                                          "not work.")
                         if not rpcpassword:
-                            self.warnMsg("Remote dash.conf parameter 'rpcpassword' is not set, so RPC interface will  "
+                            self.warnMsg("Remote fix.conf parameter 'rpcpassword' is not set, so RPC interface will  "
                                          "not work.")
                     self.update_connection_details_ui()
-                elif isinstance(dashd_conf, str):
-                    self.warnMsg("Couldn't read remote dashd configuration file due the following error: " +
-                                 dashd_conf)
+                elif isinstance(fixd_conf, str):
+                    self.warnMsg("Couldn't read remote fixd configuration file due the following error: " +
+                                 fixd_conf)
                 ssh.disconnect()
             except Exception as e:
                 self.errorMsg(str(e))
@@ -791,14 +791,14 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
     def on_btnTestConnection_clicked(self):
         if self.current_network_cfg:
             self.local_config.db_intf = self.config.db_intf
-            dashd_intf = DashdInterface(window=self)
-            dashd_intf.initialize(self.local_config, connection=self.current_network_cfg,
+            fixd_intf = FixdInterface(window=self)
+            fixd_intf.initialize(self.local_config, connection=self.current_network_cfg,
                                   for_testing_connections_only=True)
             try:
-                info = dashd_intf.getinfo(verify_node=True)
+                info = fixd_intf.getinfo(verify_node=True)
                 if info:
                     try:
-                        ret = dashd_intf.rpc_call(True, False, "checkfeaturesupport", "enhanced_proxy")
+                        ret = fixd_intf.rpc_call(True, False, "checkfeaturesupport", "enhanced_proxy")
                     except Exception as e:
                         ret = None
 
@@ -812,7 +812,7 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
             except Exception as e:
                 self.errorMsg('Connection error. Details: ' + str(e))
             finally:
-                del dashd_intf
+                del fixd_intf
 
     def set_modified(self):
         if not self.disable_cfg_update:
@@ -827,9 +827,9 @@ class ConfigDlg(QDialog, Ui_ConfigDlg, WndUtils):
         fields in the self.config object.
         """
         if self.is_modified:
-            self.local_config.dash_net_configs.clear()
-            self.local_config.dash_net_configs.extend(self.connections_mainnet)
-            self.local_config.dash_net_configs.extend(self.connections_testnet)
+            self.local_config.fix_net_configs.clear()
+            self.local_config.fix_net_configs.extend(self.connections_mainnet)
+            self.local_config.fix_net_configs.extend(self.connections_testnet)
 
             self.config.copy_from(self.local_config)
             self.config.conn_config_changed()
