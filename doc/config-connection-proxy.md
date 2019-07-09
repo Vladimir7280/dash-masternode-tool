@@ -15,7 +15,7 @@ Configuration is based on ethereum-nginx-proxy, adapted to FIX requirements by @
 
 ## Configuration
 
-When version 0.9.5 or higher of the DMT application is run the first time, "public" connections will automatically be added to the configuration. Open DMT and click the `Configure` button. In the `Configuration` dialog you should see the following three connections:
+When version 0.9.5 or higher of the FIXMT application is run the first time, "public" connections will automatically be added to the configuration. Open FIXMT and click the `Configure` button. In the `Configuration` dialog you should see the following three connections:
  * https://alice.fix-masternode-tool.org:443
  * https://luna.fix-masternode-tool.org:443
  * https://suzy.fix-masternode-tool.org:443

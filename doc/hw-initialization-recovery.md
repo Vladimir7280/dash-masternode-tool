@@ -3,14 +3,14 @@
  * [Introduction](#introduction)
  * [Understanding the *recovery seed*](#understanding-the-recovery-seed)
  * [Security principles](#security-principles)
- * [Hardware wallet initialization and recovery in DMT](#hardware-wallet-initialization-and-recovery-in-fixmt)
+ * [Hardware wallet initialization and recovery in FIXMT](#hardware-wallet-initialization-and-recovery-in-fixmt)
     * [Hardware wallet recovery - safe mode](hw-initr-safe-mode.md)
     * [Hardware wallet recovery - convenient mode](hw-initr-conv-mode.md)
     * [Hardware wallet recovery from hexadecimal entropy](hw-initr-entropy-mode.md)
     * [Hardware wallet initialization using newly generated seed words](hw-initr-new-seed.md)
     * [Hardware wallet wiping](hw-initr-wipe.md)
   * [Updating hardware wallet firmware](hw-initr-update-firmware.md)
- * [Running DMT on an offline Linux system](hw-initr-live-cd-linux.md)
+ * [Running FIXMT on an offline Linux system](hw-initr-live-cd-linux.md)
 
 ## Introduction
 
@@ -25,7 +25,7 @@ Although both scenarios are supported in the official applications provided by t
 
 ## Understanding the *recovery seed*
 
-All three hardware wallets supported by DMT (Trezor, KeepKey and Ledger Nano S) support the BIP32/BIP44/BIP39 standards. Without going into too much detail, it is sufficient to know that as a result:
+All three hardware wallets supported by FIXMT (Trezor, KeepKey and Ledger Nano S) support the BIP32/BIP44/BIP39 standards. Without going into too much detail, it is sufficient to know that as a result:
 
 - the device stores an entire tree of private keys and corresponding payment addresses
 - all of those keys are generated based on so-called *entropy* – which is essentially a unique number with a length of 16 to 32 bytes
@@ -41,9 +41,9 @@ Standard methods of device initialization and recovery are designed in such a wa
 
 To such people (but not only them), it is strongly recommended to perform recovery or initialization using a Linux OS launched from a [live CD](hw-initr-live-cd-linux.md) – after the job is done, there will be no record or any data saved that could be sent to hostile server when reconnected to the internet.
 
-## Hardware wallet initialization and recovery in DMT
+## Hardware wallet initialization and recovery in FIXMT
 
-All functionality described in this chapter is available in the `Hardware wallet initialization/recovery` dialog, launched from the `Tools` menu of DMT. The application will guide you through the steps using a standard wizard-style dialog, where interaction with the user is divided into separate steps.
+All functionality described in this chapter is available in the `Hardware wallet initialization/recovery` dialog, launched from the `Tools` menu of FIXMT. The application will guide you through the steps using a standard wizard-style dialog, where interaction with the user is divided into separate steps.
 
 List of available functions:
 
@@ -54,5 +54,5 @@ List of available functions:
 - [Hardware wallet wiping](hw-initr-wipe.md)
 - [Updating hardware wallet firmware](hw-initr-update-firmware.md)
 
-> For Ledger Nano S wallets, only two of the above options are available (second and third) – other options are not supported by the official Ledger API, so it was not possible to create a GUI for them within DMT. This, however, is not a major problem, since these functions are already available through the device interface directly.
+> For Ledger Nano S wallets, only two of the above options are available (second and third) – other options are not supported by the official Ledger API, so it was not possible to create a GUI for them within FIXMT. This, however, is not a major problem, since these functions are already available through the device interface directly.
 

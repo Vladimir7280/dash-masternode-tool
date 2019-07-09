@@ -4,7 +4,7 @@ The following procedure describes the process of building a 64-bit executable fi
 We assume that the procedure is carried out on a clean installation of the operating system, on which you have not previously installed any program used in the procedure (e.g. Python). To avoid any confusion arising from version incompatibilities, any previously installed software should be uninstalled first.
 
 ### Install *Python*
-Python version 3.6 or above is required to build DMT. Download and install Python first as follows:
+Python version 3.6 or above is required to build FIXMT. Download and install Python first as follows:
 * Open your preferred web browser and go to https://www.python.org/downloads/
 
 * Scroll to the *Looking for a specific release?* section and click the link corresponding to the latest release of the 3.6 version (3.6.4 at the time of writing):
@@ -43,7 +43,7 @@ Python version 3.6 or above is required to build DMT. Download and install Pytho
 
 ### Install *7-zip*
 
-The final step of the DMT build process compresses the executable file created during the build process. The open source software *7-zip* is used for this, so it must be installed according to the following steps.
+The final step of the FIXMT build process compresses the executable file created during the build process. The open source software *7-zip* is used for this, so it must be installed according to the following steps.
 
 * Open your preferred web browser and go to http://www.7-zip.org
 
@@ -93,7 +93,7 @@ Open the Windows command prompt (*cmd.exe*)  and run the following commands:
   cd c:\projects\virtualenvs
   ```
 
-* Create a Python virtual environment for DMT:
+* Create a Python virtual environment for FIXMT:
 
   ```
   virtualenv -p c:\Python36-64\python.exe fixmt-64
@@ -107,21 +107,21 @@ Open the Windows command prompt (*cmd.exe*)  and run the following commands:
   c:\projects\virtualenvs\fixmt-64\Scripts\activate.bat
   ```
 
-* Download the DMT source from GitHub:
+* Download the FIXMT source from GitHub:
 
   ```
   cd c:\projects
   git clone https://github.com/Bertrand256/fix-masternode-tool
   ```
 
-* Install the DMT Python requirements:
+* Install the FIXMT Python requirements:
 
   ```
   cd fix-masternode-tool
   pip install -r requirements.txt
   ```
   
-* Build the DMT executable:
+* Build the FIXMT executable:
 
   ```
   pyinstaller --distpath=..\dist\win64 --workpath=..\build\win64 fix_masternode_tool.spec

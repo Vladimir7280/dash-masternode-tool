@@ -16,7 +16,7 @@ You can build FIX Masternode Tool for macOS by opening the Terminal app and runn
   brew install python3
   ```
 
-* After the installation process completes, make sure that the Python version installed is 3.6 or newer. DMT won't compile on older versions of Python, or even older versions of Python 3:
+* After the installation process completes, make sure that the Python version installed is 3.6 or newer. FIXMT won't compile on older versions of Python, or even older versions of Python 3:
 
   ```
   python3 --version
@@ -32,7 +32,7 @@ You can build FIX Masternode Tool for macOS by opening the Terminal app and runn
   pip3 install virtualenv
   ```
 
-* Create a Python virtual environment for DMT:
+* Create a Python virtual environment for FIXMT:
 
   ```
   cd ~
@@ -48,21 +48,21 @@ You can build FIX Masternode Tool for macOS by opening the Terminal app and runn
   source fixmt/bin/activate
   ```
 
-* Download the DMT source from GitHub:
+* Download the FIXMT source from GitHub:
 
   ```
   cd ~/projects
   git clone https://github.com/Bertrand256/fix-masternode-tool
   ```
 
-* Install the DMT Python requirements:
+* Install the FIXMT Python requirements:
 
   ```
   cd fix-masternode-tool
   pip install -r requirements.txt
   ```
 
-* Build the DMT executable:
+* Build the FIXMT executable:
 
   ```
   pyinstaller --distpath=../dist/mac --workpath=../build/mac fix_masternode_tool.spec

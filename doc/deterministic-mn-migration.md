@@ -9,15 +9,15 @@ transaction (**ProRegTx**) in which all the necessary information is
 provided.
 
 The scope covered in this document applies only to what directly relates
-to the DMT functionalities and it focuses on the migration from
+to the FIXMT functionalities and it focuses on the migration from
 nondeterministic to deterministic (DIP3) masternodes. To get familiar
 with a broader context in this matter, read the following document:
 [FIX 0.13 Upgrade Procedure](https://docs.fix.org/en/stable/masternodes/dip3-upgrade.html#masternode-registration-from-fixmt),
 which I highly recommend.
 
 It's worth noting here, that this process can be performed completely
-independently from DMT (using the FIX Core wallet), however, the
-inclusion of this function in DMT is aimed at the maximum facilitation
+independently from FIXMT (using the FIX Core wallet), however, the
+inclusion of this function in FIXMT is aimed at the maximum facilitation
 of this process.
 
 ### Contents
@@ -48,7 +48,7 @@ members, who will choose the most optimal timing for this.
 deterministic masternodes.
 
 **RPC node**: a FIX node providing an interface for external apps to
-communicate with the FIX network. FixMasternodeTool (**DMT**) requires
+communicate with the FIX network. FixMasternodeTool (**FIXMT**) requires
 connection with such node to carry out the most of its
 functionalities.
 
@@ -57,7 +57,7 @@ to the Deterministic Masternode List.
 
 ## Preliminary checks
 Before starting the process you should verify the masternode-related 
-information kept in DMT. In the screenshot below, the fields important
+information kept in FIXMT. In the screenshot below, the fields important
 in the process are marked with an ellipse:
 
 ![Prerequisites](img/dmn/config-verification.png)
@@ -66,10 +66,10 @@ in the process are marked with an ellipse:
 - Check if the IP address and TCP port number are correct.
 - Check if the collateral transaction hash/index are correct.
 - Check if the collateral address and the related BIP32 path are
-  correct. Verification of this in DMT:  
+  correct. Verification of this in FIXMT:  
   ![Prerequisites](img/dmn/address-bip32path-verification.png)
 - Close all other programs that could communicate with the same hardware
-  wallet device which you use in DMT (eg. Trezor online wallet). Two (or
+  wallet device which you use in FIXMT (eg. Trezor online wallet). Two (or
   more) programs communicating with the same device simultaneously can
   interfere with each other's communication in such a way that they may
   receive incorrect results.
@@ -99,12 +99,12 @@ ones:
 * [Automatic method using own RPC node (M2)](#automatic-method-using-own-rpc-node-m2) 
 * [Manual method using own FIX node (M3)](#manual-method-using-own-fix-node-m3)
 
-In the automatic method, the majority of activities are performed by DMT
+In the automatic method, the majority of activities are performed by FIXMT
 "in the background" and the required user interaction basically boils
 down to clicking the **Continue** button.
 
 On the other hand, the manual method requires executing commands from
-the FIX Core debug console and copying the results back to DMT, so it
+the FIX Core debug console and copying the results back to FIXMT, so it
 is dedicated to more advanced users, who are not afraid of
 using a terminal-type user interface.
 
@@ -134,8 +134,8 @@ transaction, which is created on the remote node
 If this raises your concerns (eg. you do not trust the RPC node
 operator), choose another method.
 
->  **Note 1.** The RPC nodes preconfigured in DMT (alice, luna, suzy)
->  are managed by the author of the DMT application (ie by me). For my
+>  **Note 1.** The RPC nodes preconfigured in FIXMT (alice, luna, suzy)
+>  are managed by the author of the FIXMT application (ie by me). For my
 >  part, I can ensure that no sensitive information (such as private
 >  keys) is logged anywhere. All parameters are passed to the Fix
 >  daemon, and after signing the transaction they disappear.
@@ -151,24 +151,24 @@ operator), choose another method.
 >  depending on when you would notice the change. Protection against
 >  this is quite simple - it is enough to monitor changes in the payout
 >  address and owner key using data available on the FIX network. This
->  feature is implemented in DMT under the **Get status** button. If
+>  feature is implemented in FIXMT under the **Get status** button. If
 >  there is a change in relation to the data stored in the
 >  configuration, a warning will be displayed. If something like that
 >  happens, you must immediately generate a new ProRegTx transaction
 >  with a new set of keys.
 
 #### Step 1. Select the masternode you want to migrate
-You do this in the main DMT window.
+You do this in the main FIXMT window.
 
 #### Step 2. Start _Masternode migration wizard_ 
 Do it by clicking the **Send ProRegTx** button on the bottom right of
-the main DMT window.
+the main FIXMT window.
 
 ![Start wizard](img/dmn/start-wizard.png)
 
 > Note, the **Send ProRegTx** button is only visible if the DIP3
 > parameter is active. If you are sure that this is the case and the
-> button is still not visible, make DMT to establish the connection with
+> button is still not visible, make FIXMT to establish the connection with
 > the FIX network to force it to read the current network parameters.
 > You can do this by clicking the **Check FIX Network Connection**
 > toolbar button.
@@ -234,7 +234,7 @@ automatically go to the summary page.
 
 The summary page will show all relevant values (eg. private keys) used
 during the process. Most of them will be copied to the masternode
-configuration in DMT, nevertheless it's worth saving them in a separate
+configuration in FIXMT, nevertheless it's worth saving them in a separate
 file.
 
 The last thing to do here depends on your use case:
@@ -268,7 +268,7 @@ indexing being enabled.
 Follow the steps described here:
 [Connection to a local node](doc/config-connection-direct.md)
 
-Remember to configure a connection between DMT and your RPC node and to
+Remember to configure a connection between FIXMT and your RPC node and to
 turn off all others.
 
 > Note, that the RPC node has nothing to do with your masternode - this
@@ -321,7 +321,7 @@ This is the address to which you've sent funds in the previous steps.
 
 ![Fee source address](img/dmn/wizard-page3-manual-a.png)
   
-#### Step 7. Copy the command text generated by DMT in field "2"  
+#### Step 7. Copy the command text generated by FIXMT in field "2"  
 The text contains the `protx register_submit` command with all the
 necessary parameters.
 
@@ -338,7 +338,7 @@ Select and copy the output text, including braces but nothing more.
 
 ![Register_prepare results](img/dmn/wizard-page3-manual-c.png)
   
-#### Step 10. Paste the command output into field "3" (DMT) and click _Sign message with hardware wallet_  
+#### Step 10. Paste the command output into field "3" (FIXMT) and click _Sign message with hardware wallet_  
 ![Sign message](img/dmn/wizard-page3-manual-d.png)
 
 Hint: you can use the **Paste** button on the rigth. 
@@ -360,7 +360,7 @@ Hint: you can use the **Copy** button on the right.
 
 This string will from now on identify your deterministic masternode.
 
-#### Step 14. Paste the copied transaction number into field "5" in DMT.
+#### Step 14. Paste the copied transaction number into field "5" in FIXMT.
 ![Protx tx hash](img/dmn/wizard-page3-manual-g.png)
 
 Wcisnij przycisk `Continue`.
@@ -380,7 +380,7 @@ following:
   
 #### Can I modify the payout address without resetting the place in the payment queue?
 Yes, you can do it. For this, you must send a **ProUpRegTx** transaction
-from FIX Core - as of now, DMT does not have a user interface
+from FIX Core - as of now, FIXMT does not have a user interface
 supporting this functionality, so you will need to manually execute
 commands from the FIX Core Debug console.
 
@@ -395,7 +395,7 @@ commands from the FIX Core Debug console.
     it by issuing the command  
     `walletpassphrase "your-wallet-passphrase" 600`
   
-    2.2. Copy the owner private key to clipboard (eg. from DMT
+    2.2. Copy the owner private key to clipboard (eg. from FIXMT
     configuration).
     
     2.3. Import the key by executing the following command in Debug

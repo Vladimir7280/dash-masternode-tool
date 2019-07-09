@@ -1,5 +1,5 @@
 # Connection to a local FIX daemon
-In this scenario, you will use your own FIX daemon configured to serve JSON-RPC requests on your local network or any network you can access directly. The most convenient way to achieve this is to run a daemon on the same computer as the DMT application itself.
+In this scenario, you will use your own FIX daemon configured to serve JSON-RPC requests on your local network or any network you can access directly. The most convenient way to achieve this is to run a daemon on the same computer as the FIXMT application itself.
 
 ## Install the FIX Core wallet
 We will use the official FIX Core client as the FIX daemon for this configuration. Install it now if not already installed. Binary installers for macOS, Linux and Windows can be downloaded from the [official site](https://www.fix.org/wallets), while documentation on the installation process is available on the [FIX Wiki](https://docs.fix.org/en/stable/wallets/fixcore/installation.html).
@@ -33,8 +33,8 @@ Setting parameters related to indexing and even restarting the application is no
     ![Wallet repair rebuild index](img/fixqt-rebuild-index.png)
  * Wait until the operation is complete. This step may take several hours.
 
-## Configure connection in the DMT
- * Open DMT and click the `Configure` button.
+## Configure connection in the FIXMT
+ * Open FIXMT and click the `Configure` button.
  * Select the `FIX network` tab.
  * Click the `+` (plus) button on the left side of the dialog.
  * Check the `Enabled` box.
@@ -45,5 +45,5 @@ Setting parameters related to indexing and even restarting the application is no
    * `RPC password`: enter the value you specified for the `rpcpassword` parameter in the `fix.conf` file.
  * Make sure the `Use SSH tunnel` and `SSL` checkboxes remain unchecked. Also, if you decide to use only this connection, deactivate all other connections by unchecking the corresponding `Enabled` checkboxes.  
     ![Direct connection configuration window](img/fixmt-config-dlg-conn-direct.png)
- * Click the `Test connection` button. If successful, DMT will return the following message:  
+ * Click the `Test connection` button. If successful, FIXMT will return the following message:  
     ![Connection successful](img/fixmt-conn-success.png)

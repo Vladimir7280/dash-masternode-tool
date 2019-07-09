@@ -4,7 +4,7 @@ This scenario is intended for those who already have a running masternode contro
 
 In the old configuration, *FIX Core* controls the private key of the 1000000 FIX collateral, and is used to send the `start masternode` command. By contrast, in the target configuration, the 1000000 FIX collateral is controlled by a hardware wallet (such as Trezor) and the `start masternode` command is invoked by the *FIX Masternode Tool* application.
 
-The procedure described below boils down to sending 1000000 FIX funds from your *FIX Core* wallet to a new address controlled by a hardware wallet, and then configuring the masternode in *DMT*. You will not be changing any of the *fixd* configuration parameters, so you will not need to restart it at the end of the sequence. However, you must be aware that sending a `start masternode` message will reset the position of your masternode in the payment queue. For this reason, it is best to carry out this change in configuration immediately after receiving your last payment.
+The procedure described below boils down to sending 1000000 FIX funds from your *FIX Core* wallet to a new address controlled by a hardware wallet, and then configuring the masternode in *FIXMT*. You will not be changing any of the *fixd* configuration parameters, so you will not need to restart it at the end of the sequence. However, you must be aware that sending a `start masternode` message will reset the position of your masternode in the payment queue. For this reason, it is best to carry out this change in configuration immediately after receiving your last payment.
 
 
 ## Sending 1000000 FIX to the hardware wallet address
@@ -47,7 +47,7 @@ Run *FIX Masternode Tool* and click the `New` button to enter *edit* mode. If yo
 
 ### Step 6
 
-Copy the `Name` (you can change it - it's just a label), the `IP:port` and the `MN private key` to the corresponding fields in *DMT*.  
+Copy the `Name` (you can change it - it's just a label), the `IP:port` and the `MN private key` to the corresponding fields in *FIXMT*.  
   ![Data for configuration fields](img/conf-masternodes-a-3.png)
 
 ## Entering information on the collateral

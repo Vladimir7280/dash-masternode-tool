@@ -2,7 +2,7 @@
 Please note that currently the documentation lags behind the development of the program, in particular in the area 
 related to starting masternodes. It will be improved according to the resources available. 
 
-# FIX Masternode Tool (DMT)
+# FIX Masternode Tool (FIXMT)
 
 ## Contents
 
@@ -29,7 +29,7 @@ related to starting masternodes. It will be improved according to the resources 
    * [Browsing and voting on proposals](doc/proposals.md)
    * [Hardware wallet initialization/recovery](doc/hw-initialization-recovery.md)
      * [Updating hardware wallet firmware](doc/hw-initr-update-firmware.md)
- * Building the DMT executables
+ * Building the FIXMT executables
     * [macOS](doc/build-fixmt-mac.md)
     * [Windows](doc/build-fixmt-windows.md)
     * Linux
@@ -79,7 +79,7 @@ Most of the application features are accessible from the main program window:
 
 ## Connection setup
 
-Most of the application features involve exchanging data between the application itself and the FIX network. To do this, *DMT* needs to connect to one of the full nodes on the network, specifically one which can handle JSON-RPC requests. This node plays the role of a gateway for *DMT* to the FIX network. It does not matter which full node node provides the service, because all nodes reach consensus by synchronizing information between each other on the FIX network.
+Most of the application features involve exchanging data between the application itself and the FIX network. To do this, *FIXMT* needs to connect to one of the full nodes on the network, specifically one which can handle JSON-RPC requests. This node plays the role of a gateway for *FIXMT* to the FIX network. It does not matter which full node node provides the service, because all nodes reach consensus by synchronizing information between each other on the FIX network.
 
 Depending on your preferences (and skills) you can choose one of three possible connection types:
  * [Direct connection to a local node](doc/config-connection-direct.md), for example to *FIX Core* running on your normal computer.
@@ -94,7 +94,7 @@ Here we make the following assumptions:
   * Your server has a public IP address that will be visible on the Internet.
   * You have set up a TCP port on which your *fixd* listens for incoming connections (usually 17464).
 
-Further configuration steps depend on whether you already have a masternode controlled by *FIX Core* which you want to migrate to a hardware wallet managed by *DMT*, or if you are setting up a new masternode.
+Further configuration steps depend on whether you already have a masternode controlled by *FIX Core* which you want to migrate to a hardware wallet managed by *FIXMT*, or if you are setting up a new masternode.
 
 [Scenario A - moving masternode management from FIX Core](doc/config-masternodes-a.md)  
 [Scenario B - configuration of a new masternode](doc/config-masternodes-b.md)
@@ -112,7 +112,7 @@ The application currently supports the following command-line parameters:
 
 ## Starting a masternode
 
-Once you set up the FIX daemon and perform the required *DMT* configuration, you need to broadcast the `start masternode` message to the FIX network, so the other FIX nodes recognize your daemon as a masternode and add it to the payment queue.
+Once you set up the FIX daemon and perform the required *FIXMT* configuration, you need to broadcast the `start masternode` message to the FIX network, so the other FIX nodes recognize your daemon as a masternode and add it to the payment queue.
 
 To do this, click the `Start Masternode using Hardware wallet` button.
 
@@ -137,7 +137,7 @@ The steps are as follows:
 4. Opening a connection to the hardware wallet. Message in case of failure:  
   ![Cannot find Trezor device](doc/img/startmn-hw-error.png)
 
-5. If the `BIP32 path` value is empty, *DMT* uses the *collateral address* to read the BIP32 path from the hardware wallet.
+5. If the `BIP32 path` value is empty, *FIXMT* uses the *collateral address* to read the BIP32 path from the hardware wallet.
 
 6. Retrieving the FIX address from the hardware wallet for the `BIP32 path` specified in the configuration. If it differs from the collateral address provided in the configuration, the following warning appears:  
   ![FIX address mismatch](doc/img/startmn-addr-mismatch-warning.png)  
@@ -162,7 +162,7 @@ The steps are as follows:
 
 ## Transferring masternode earnings
 
-DMT version 0.9.4 and above allows you to transfer your masternode earnings. Unlike other FIX wallets, DMT gives you a 100% control over which *unspent transaction outputs* (utxo) you want to transfer. This has the same effect as the `Coin control` functionality implemented in the *FIX Core* wallet.
+FIXMT version 0.9.4 and above allows you to transfer your masternode earnings. Unlike other FIX wallets, FIXMT gives you a 100% control over which *unspent transaction outputs* (utxo) you want to transfer. This has the same effect as the `Coin control` functionality implemented in the *FIX Core* wallet.
 
 The `Transfer funds` window shows all *UTXOs* of the currently selected Masternode (mode 1), all Masternodes in current configuration (mode 2) or any address controlled by a hardware wallet (mode 3). All *UTXOs* not used as collateral are initially selected. All collateral *UTXOs* (1000000 Fix) are initially hidden to avoid unintentionally spending collateral funds and thus breaking MN. You can show these hidden entries by unchecking the `Hide collateral utxos` option.
 
@@ -206,7 +206,7 @@ Click the `Tools` button and select the `Hardware wallet PIN/Passphrase configur
 
 ## Downloads
 
-This application is written in Python 3, but requires several additional libraries to run. These libraries in turn require the installation of a C++ compiler. All in all, compiling DMT from source is not trivial for non-technical people, especially the steps carried out under Linux (though this will be documented soon).
+This application is written in Python 3, but requires several additional libraries to run. These libraries in turn require the installation of a C++ compiler. All in all, compiling FIXMT from source is not trivial for non-technical people, especially the steps carried out under Linux (though this will be documented soon).
 
 For this reason, in addition to providing the source code on GitHub, binary versions for all three major operating systems - macOS, Windows (32 and 64-bit) and Linux - are available for download directly. The binaries are compiled and tested under the following OS distributions:
 * Windows 7 64-bit
@@ -224,7 +224,7 @@ The verification method described below is based on use of the Keybase applicati
 
 1. Open your OS command line terminal
 
-2. Change the current directory to the folder where the DMT release files were downloaded:
+2. Change the current directory to the folder where the FIXMT release files were downloaded:
 
    `cd /Users/<username>/fixmt-dist`
 

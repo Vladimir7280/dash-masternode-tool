@@ -2,7 +2,7 @@
 
 ### Method based on physical or virtual linux machine
 
-An Ubuntu distribution with Python 3.6 is required to build DMT. This example uses Ubuntu 17.10, which comes with an appropriate version installed by default. You can verify the Python version by typing:
+An Ubuntu distribution with Python 3.6 is required to build FIXMT. This example uses Ubuntu 17.10, which comes with an appropriate version installed by default. You can verify the Python version by typing:
 
 ```
 python3 --version
@@ -41,7 +41,7 @@ The following files will be created once the build has completed successfully:
 
 This method uses a dedicated **docker image** configured to carry out an automated build process for *FIX Masternode Tool*. The advantage of this method is its simplicity and the fact that it does not make any changes in the list of installed apps/libraries on your physical/virtual machine. All necessary dependencies are installed inside the Docker container. The second important advantage is that compilation can also be carried out on Windows or macOS (if Docker is installed), but keep in mind that the result of the build will be a Linux executable.
 
-> **Note: Skip steps 3 and 4 if you are not performing this procedure for the first time (building a newer version of DMT, for example)**
+> **Note: Skip steps 3 and 4 if you are not performing this procedure for the first time (building a newer version of FIXMT, for example)**
 
 #### 1. Create a new directory
 We will refer to this as the *working directory* in the remainder of this documentation.
@@ -70,7 +70,7 @@ Execute the following command:
 docker pull bertrand256/build-fixmt:ubuntu
 ```
 
-**Build the image yourself, using the Dockerfile file from the DMT project repository.** 
+**Build the image yourself, using the Dockerfile file from the FIXMT project repository.** 
 
 * Download the https://github.com/Bertrand256/fix-masternode-tool/blob/master/build/ubuntu/Dockerfile file and place it in the *working directory*
 * Execute the following command:
